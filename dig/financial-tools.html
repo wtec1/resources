@@ -1,0 +1,591 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Tools - Budget, Calculate, Track</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#3b82f6',
+                        accent: '#10b981',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-3xl font-bold text-gray-800 text-center md:text-left">
+                💰 Financial Tools Suite
+            </h1>
+            <p class="text-gray-600 text-center md:text-left mt-2">
+                Manage your finances with our comprehensive toolkit
+            </p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-primary text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center md:justify-start gap-2 py-4">
+                <button onclick="showTool('fee-calculator')" class="nav-btn px-4 py-2 rounded-lg bg-secondary hover:bg-blue-600 transition-colors">
+                    Fee Calculator
+                </button>
+                <button onclick="showTool('budget-planner')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Budget Planner
+                </button>
+                <button onclick="showTool('expense-tracker')" class="nav-btn px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                    Expense Tracker
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Fee Calculator -->
+        <div id="fee-calculator" class="tool-section">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    🧮 Fee Calculator
+                    <span class="ml-2 text-sm font-normal text-gray-500">Calculate various fees and charges</span>
+                </h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Transaction Fee Calculator -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">Transaction Fee Calculator</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Amount (MK)</label>
+                                <input type="number" id="transaction-amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="1000">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Fee Rate (%)</label>
+                                <input type="number" id="fee-rate" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="2.5" step="0.1">
+                            </div>
+                            <button onclick="calculateTransactionFee()" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                Calculate Fee
+                            </button>
+                            <div id="transaction-result" class="bg-blue-50 p-4 rounded-lg hidden">
+                                <div class="text-sm text-gray-600">Transaction Fee:</div>
+                                <div class="text-xl font-bold text-primary" id="fee-amount">MK0.00</div>
+                                <div class="text-sm text-gray-600 mt-2">Net Amount:</div>
+                                <div class="text-lg font-semibold text-gray-800" id="net-amount">MK0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card Interest Calculator -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-gray-700">Credit Interest Calculator</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Balance (MK)</label>
+                                <input type="number" id="cc-balance" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="5000">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">APR (%)</label>
+                                <input type="number" id="cc-apr" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="18.99" step="0.01">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Months</label>
+                                <input type="number" id="cc-months" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="12">
+                            </div>
+                            <button onclick="calculateCreditCardInterest()" class="w-full bg-accent text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                                Calculate Interest
+                            </button>
+                            <div id="cc-result" class="bg-green-50 p-4 rounded-lg hidden">
+                                <div class="text-sm text-gray-600">Monthly Payment:</div>
+                                <div class="text-xl font-bold text-accent" id="monthly-payment">MK0.00</div>
+                                <div class="text-sm text-gray-600 mt-2">Total Interest:</div>
+                                <div class="text-lg font-semibold text-gray-800" id="total-interest">MK0.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Planner -->
+        <div id="budget-planner" class="tool-section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    📊 Budget Planner
+                    <span class="ml-2 text-sm font-normal text-gray-500">Plan and track your monthly budget</span>
+                </h2>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Income Section -->
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-green-800 flex items-center">
+                            💵 Income
+                            <button onclick="addIncomeItem()" class="ml-auto bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
+                                + Add
+                            </button>
+                        </h3>
+                        <div id="income-list" class="space-y-3">
+                            <div class="flex justify-between items-center bg-white p-3 rounded">
+                                <span>Salary</span>
+                                <input type="number" class="income-input w-20 text-right border-0 bg-transparent font-semibold" placeholder="0" oninput="updateBudget()">
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-green-200">
+                            <div class="flex justify-between font-bold text-green-800">
+                                <span>Total Income:</span>
+                                <span id="total-income">MK0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expenses Section -->
+                    <div class="bg-red-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-red-800 flex items-center">
+                            💸 Expenses
+                            <button onclick="addExpenseItem()" class="ml-auto bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">
+                                + Add
+                            </button>
+                        </h3>
+                        <div id="expense-list" class="space-y-3">
+                            <div class="flex justify-between items-center bg-white p-3 rounded">
+                                <span>Rent</span>
+                                <input type="number" class="expense-input w-20 text-right border-0 bg-transparent font-semibold" placeholder="0" oninput="updateBudget()">
+                            </div>
+                            <div class="flex justify-between items-center bg-white p-3 rounded">
+                                <span>Groceries</span>
+                                <input type="number" class="expense-input w-20 text-right border-0 bg-transparent font-semibold" placeholder="0" oninput="updateBudget()">
+                            </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-red-200">
+                            <div class="flex justify-between font-bold text-red-800">
+                                <span>Total Expenses:</span>
+                                <span id="total-expenses">MK0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Section -->
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-800">📈 Budget Summary</h3>
+                        <div class="space-y-4">
+                            <div class="bg-white p-4 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-gray-600">Net Income:</span>
+                                    <span id="net-income" class="font-bold text-xl">mk0</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div id="budget-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-sm text-gray-600">
+                                <div class="flex justify-between">
+                                    <span>Income:</span>
+                                    <span id="summary-income">MK0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Expenses:</span>
+                                    <span id="summary-expenses">MK0</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Savings Rate:</span>
+                                    <span id="savings-rate">0%</span>
+                                </div>
+                            </div>
+
+                            <div id="budget-status" class="p-3 rounded-lg text-center font-semibold">
+                                Start adding your income and expenses
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expense Tracker -->
+        <div id="expense-tracker" class="tool-section hidden">
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    📝 Expense Tracker
+                    <span class="ml-2 text-sm font-normal text-gray-500">Track your daily expenses</span>
+                </h2>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Add Expense Form -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-gray-50 rounded-lg p-6 sticky top-24">
+                            <h3 class="text-lg font-semibold mb-4 text-gray-700">Add New Expense</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+                                    <input type="text" id="expense-description" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Coffee, Gas, etc.">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Amount (MK)</label>
+                                    <input type="number" id="expense-amount" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="0.00" step="0.01">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Category</label>
+                                    <select id="expense-category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="Food">🍕 Food</option>
+                                        <option value="Transport">🚗 Transport</option>
+                                        <option value="Shopping">🛍️ Shopping</option>
+                                        <option value="Bills">📄 Bills</option>
+                                        <option value="Entertainment">🎬 Entertainment</option>
+                                        <option value="Health">🏥 Health</option>
+                                        <option value="Other">📦 Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">Date</label>
+                                    <input type="date" id="expense-date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <button onclick="addExpense()" class="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                    Add Expense
+                                </button>
+                            </div>
+                            
+                            <!-- Summary Stats -->
+                            <div class="mt-6 pt-6 border-t border-gray-200">
+                                <h4 class="font-semibold text-gray-700 mb-3">This Month</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between">
+                                        <span>Total Spent:</span>
+                                        <span id="total-spent" class="font-semibold">MK0.00</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Transactions:</span>
+                                        <span id="total-transactions" class="font-semibold">0</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Avg per Day:</span>
+                                        <span id="avg-per-day" class="font-semibold">MK0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense List -->
+                    <div class="lg:col-span-2">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-700">Recent Expenses</h3>
+                            <button onclick="clearExpenses()" class="text-red-600 hover:text-red-800 text-sm">
+                                Clear All
+                            </button>
+                        </div>
+                        
+                        <div id="expense-list-container" class="space-y-3 max-h-96 overflow-y-auto">
+                            <div class="text-center text-gray-500 py-8">
+                                No expenses added yet. Start tracking your spending!
+                            </div>
+                        </div>
+
+                        <!-- Category Breakdown -->
+                        <div class="mt-8">
+                            <h4 class="text-lg font-semibold text-gray-700 mb-4">Category Breakdown</h4>
+                            <div id="category-breakdown" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <!-- Categories will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let expenses = [];
+        let currentTool = 'fee-calculator';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('expense-date').valueAsDate = new Date();
+            updateActiveNavButton();
+        });
+
+        // Navigation functions
+        function showTool(toolId) {
+            // Hide all tools
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show selected tool
+            document.getElementById(toolId).classList.remove('hidden');
+            currentTool = toolId;
+            updateActiveNavButton();
+        }
+
+        function updateActiveNavButton() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-secondary');
+            });
+            
+            const activeBtn = document.querySelector(`[onclick="showTool('${currentTool}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-secondary');
+            }
+        }
+
+        // Fee Calculator functions
+        function calculateTransactionFee() {
+            const amount = parseFloat(document.getElementById('transaction-amount').value) || 0;
+            const rate = parseFloat(document.getElementById('fee-rate').value) || 0;
+            
+            const fee = amount * (rate / 100);
+            const netAmount = amount - fee;
+            
+            document.getElementById('fee-amount').textContent = `MK${fee.toFixed(2)}`;
+            document.getElementById('net-amount').textContent = `MK${netAmount.toFixed(2)}`;
+            document.getElementById('transaction-result').classList.remove('hidden');
+        }
+
+        function calculateCreditCardInterest() {
+            const balance = parseFloat(document.getElementById('cc-balance').value) || 0;
+            const apr = parseFloat(document.getElementById('cc-apr').value) || 0;
+            const months = parseInt(document.getElementById('cc-months').value) || 1;
+            
+            const monthlyRate = apr / 100 / 12;
+            const monthlyPayment = (balance * monthlyRate * Math.pow(1 + monthlyRate, months)) / 
+                                  (Math.pow(1 + monthlyRate, months) - 1);
+            const totalPayment = monthlyPayment * months;
+            const totalInterest = totalPayment - balance;
+            
+            document.getElementById('monthly-payment').textContent = `MK${monthlyPayment.toFixed(2)}`;
+            document.getElementById('total-interest').textContent = `MK${totalInterest.toFixed(2)}`;
+            document.getElementById('cc-result').classList.remove('hidden');
+        }
+
+        // Budget Planner functions
+        function addIncomeItem() {
+            const incomeList = document.getElementById('income-list');
+            const name = prompt('Enter income source name:') || 'Income';
+            
+            const div = document.createElement('div');
+            div.className = 'flex justify-between items-center bg-white p-3 rounded';
+            div.innerHTML = `
+                <span>${name}</span>
+                <input type="number" class="income-input w-20 text-right border-0 bg-transparent font-semibold" placeholder="0" oninput="updateBudget()">
+                <button onclick="this.parentElement.remove(); updateBudget();" class="ml-2 text-red-500 hover:text-red-700">×</button>
+            `;
+            incomeList.appendChild(div);
+        }
+
+        function addExpenseItem() {
+            const expenseList = document.getElementById('expense-list');
+            const name = prompt('Enter expense name:') || 'Expense';
+            
+            const div = document.createElement('div');
+            div.className = 'flex justify-between items-center bg-white p-3 rounded';
+            div.innerHTML = `
+                <span>${name}</span>
+                <input type="number" class="expense-input w-20 text-right border-0 bg-transparent font-semibold" placeholder="0" oninput="updateBudget()">
+                <button onclick="this.parentElement.remove(); updateBudget();" class="ml-2 text-red-500 hover:text-red-700">×</button>
+            `;
+            expenseList.appendChild(div);
+        }
+
+        function updateBudget() {
+            const incomeInputs = document.querySelectorAll('.income-input');
+            const expenseInputs = document.querySelectorAll('.expense-input');
+            
+            let totalIncome = 0;
+            let totalExpenses = 0;
+            
+            incomeInputs.forEach(input => {
+                totalIncome += parseFloat(input.value) || 0;
+            });
+            
+            expenseInputs.forEach(input => {
+                totalExpenses += parseFloat(input.value) || 0;
+            });
+            
+            const netIncome = totalIncome - totalExpenses;
+            const savingsRate = totalIncome > 0 ? ((netIncome / totalIncome) * 100) : 0;
+            
+            // Update displays
+            document.getElementById('total-income').textContent = `MK${totalIncome.toFixed(0)}`;
+            document.getElementById('total-expenses').textContent = `MK${totalExpenses.toFixed(0)}`;
+            document.getElementById('net-income').textContent = `MK${netIncome.toFixed(0)}`;
+            document.getElementById('summary-income').textContent = `MK${totalIncome.toFixed(0)}`;
+            document.getElementById('summary-expenses').textContent = `MK${totalExpenses.toFixed(0)}`;
+            document.getElementById('savings-rate').textContent = `${savingsRate.toFixed(1)}%`;
+            
+            // Update budget bar
+            const percentage = totalIncome > 0 ? Math.min((totalExpenses / totalIncome) * 100, 100) : 0;
+            document.getElementById('budget-bar').style.width = `${percentage}%`;
+            
+            // Update status
+            const statusElement = document.getElementById('budget-status');
+            if (netIncome > 0) {
+                statusElement.textContent = `Great! You're saving MK${netIncome.toFixed(0)} this month`;
+                statusElement.className = 'p-3 rounded-lg text-center font-semibold bg-green-100 text-green-800';
+            } else if (netIncome < 0) {
+                statusElement.textContent = `Warning: You're overspending by MK${Math.abs(netIncome).toFixed(0)}`;
+                statusElement.className = 'p-3 rounded-lg text-center font-semibold bg-red-100 text-red-800';
+            } else {
+                statusElement.textContent = 'You\'re breaking even this month';
+                statusElement.className = 'p-3 rounded-lg text-center font-semibold bg-yellow-100 text-yellow-800';
+            }
+        }
+
+        // Expense Tracker functions
+        function addExpense() {
+            const description = document.getElementById('expense-description').value;
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const category = document.getElementById('expense-category').value;
+            const date = document.getElementById('expense-date').value;
+            
+            if (!description || !amount || amount <= 0) {
+                alert('Please fill in all fields with valid values.');
+                return;
+            }
+            
+            const expense = {
+                id: Date.now(),
+                description,
+                amount,
+                category,
+                date: new Date(date)
+            };
+            
+            expenses.unshift(expense);
+            
+            // Clear form
+            document.getElementById('expense-description').value = '';
+            document.getElementById('expense-amount').value = '';
+            document.getElementById('expense-date').valueAsDate = new Date();
+            
+            updateExpenseList();
+            updateExpenseStats();
+            updateCategoryBreakdown();
+        }
+
+        function updateExpenseList() {
+            const container = document.getElementById('expense-list-container');
+            
+            if (expenses.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        No expenses added yet. Start tracking your spending!
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = expenses.map(expense => `
+                <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-sm font-medium">${getCategoryIcon(expense.category)} ${expense.category}</span>
+                                <span class="text-xs text-gray-500">${expense.date.toLocaleDateString()}</span>
+                            </div>
+                            <div class="text-gray-800 font-medium">${expense.description}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-primary">MK${expense.amount.toFixed(2)}</div>
+                            <button onclick="removeExpense(${expense.id})" class="text-red-500 hover:text-red-700 text-sm">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateExpenseStats() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            const monthlyExpenses = expenses.filter(expense => 
+                expense.date.getMonth() === currentMonth && 
+                expense.date.getFullYear() === currentYear
+            );
+            
+            const totalSpent = monthlyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const avgPerDay = totalSpent / daysInMonth;
+            
+            document.getElementById('total-spent').textContent = `MK${totalSpent.toFixed(2)}`;
+            document.getElementById('total-transactions').textContent = monthlyExpenses.length;
+            document.getElementById('avg-per-day').textContent = `MK${avgPerDay.toFixed(2)}`;
+        }
+
+        function updateCategoryBreakdown() {
+            const categoryTotals = {};
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            expenses
+                .filter(expense => 
+                    expense.date.getMonth() === currentMonth && 
+                    expense.date.getFullYear() === currentYear
+                )
+                .forEach(expense => {
+                    categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+                });
+            
+            const container = document.getElementById('category-breakdown');
+            
+            if (Object.keys(categoryTotals).length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center text-gray-500">No expenses this month</div>';
+                return;
+            }
+            
+            container.innerHTML = Object.entries(categoryTotals)
+                .sort(([,a], [,b]) => b - a)
+                .map(([category, total]) => `
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 text-center hover:shadow-md transition-shadow">
+                        <div class="text-2xl mb-2">${getCategoryIcon(category)}</div>
+                        <div class="text-sm font-medium text-gray-600">${category}</div>
+                        <div class="text-lg font-bold text-primary">MK${total.toFixed(2)}</div>
+                    </div>
+                `).join('');
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'Food': '🍕',
+                'Transport': '🚗',
+                'Shopping': '🛍️',
+                'Bills': '📄',
+                'Entertainment': '🎬',
+                'Health': '🏥',
+                'Other': '📦'
+            };
+            return icons[category] || '📦';
+        }
+
+        function removeExpense(id) {
+            expenses = expenses.filter(expense => expense.id !== id);
+            updateExpenseList();
+            updateExpenseStats();
+            updateCategoryBreakdown();
+        }
+
+        function clearExpenses() {
+            if (confirm('Are you sure you want to clear all expenses? This cannot be undone.')) {
+                expenses = [];
+                updateExpenseList();
+                updateExpenseStats();
+                updateCategoryBreakdown();
+            }
+        }
+    </script>
+</body>
+</html>

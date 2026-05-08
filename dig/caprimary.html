@@ -1,0 +1,406 @@
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CA Tracking - Digital Gradebook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+        }
+        .print-only { display: none; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto p-6">
+        <!-- Header -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">grade Tracking - Digital Gradebook</h1>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-4"> For Primary School</h2>
+            
+            <!-- School Information -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">School Name</label>
+                    <input type="text" id="schoolName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter school name">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Term</label>
+                    <select id="term" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="First Term">First Term</option>
+                        <option value="Second Term">Second Term</option>
+                        <option value="Third Term">Third Term</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                    <input type="text" id="academicYear" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="2023-2024">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Class</label>
+                    <input type="text" id="className" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Grade 10A">
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6 no-print">
+            <div class="flex flex-wrap gap-4 mb-4">
+                <button onclick="addStudent()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    Add Student
+                </button>
+                <button onclick="addSubject()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    Add Subject
+                </button>
+                <button onclick="calculateAll()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    Calculate Totals & Positions
+                </button>
+                <button onclick="printGrades()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    Print
+                </button>
+                <button onclick="downloadCSV()" class="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-md transition duration-200">
+                    Download CSV
+                </button>
+            </div>
+        </div>
+
+        <!-- Gradebook Table -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6 overflow-x-auto">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Gradebook</h2>
+            <table id="gradebook" class="w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-gray-300 px-4 py-2 text-left">Student Name</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Math</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Eng</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Chich</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Total</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Average</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Position</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">Remarks</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left no-print">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="gradebookBody">
+                    <tr>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="text" class="w-full border-0 focus:outline-none student-name" placeholder="Student Name">
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="number" class="w-full border-0 focus:outline-none grade" max="100" min="0" placeholder="0">
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="number" class="w-full border-0 focus:outline-none grade" max="100" min="0" placeholder="0">
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="number" class="w-full border-0 focus:outline-none grade" max="100" min="0" placeholder="0">
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2 total-cell">0</td>
+                        <td class="border border-gray-300 px-4 py-2 average-cell">0.00</td>
+                        <td class="border border-gray-300 px-4 py-2 position-cell">-</td>
+                        <td class="border border-gray-300 px-4 py-2">
+                            <input type="text" class="w-full border-0 focus:outline-none remarks" placeholder="Remarks">
+                        </td>
+                        <td class="border border-gray-300 px-4 py-2 no-print">
+                            <button onclick="removeStudent(this)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Progress Chart -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Class Performance Chart</h2>
+            <div class="w-full h-64">
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Class Statistics</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4" id="statistics">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-blue-800">Total Students</h3>
+                    <p class="text-2xl font-bold text-blue-900" id="totalStudents">0</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-green-800">Class Average</h3>
+                    <p class="text-2xl font-bold text-green-900" id="classAverage">0.00</p>
+                </div>
+                <div class="bg-yellow-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-yellow-800">Highest Score</h3>
+                    <p class="text-2xl font-bold text-yellow-900" id="highestScore">0</p>
+                </div>
+                <div class="bg-red-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-medium text-red-800">Lowest Score</h3>
+                    <p class="text-2xl font-bold text-red-900" id="lowestScore">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let subjects = ['Eng', 'Math', 'Chich'];
+        let chart = null;
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initializeChart();
+            calculateAll();
+        });
+
+        function setupEventListeners() {
+            // Add event listeners for grade inputs
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('grade')) {
+                    calculateRowTotal(e.target.closest('tr'));
+                    updateChart();
+                    updateStatistics();
+                }
+            });
+        }
+
+        function addStudent() {
+            const tbody = document.getElementById('gradebookBody');
+            const newRow = document.createElement('tr');
+            
+            let subjectCells = '';
+            subjects.forEach(() => {
+                subjectCells += `
+                    <td class="border border-gray-300 px-4 py-2">
+                        <input type="number" class="w-full border-0 focus:outline-none grade" max="100" min="0" placeholder="0">
+                    </td>
+                `;
+            });
+
+            newRow.innerHTML = `
+                <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" class="w-full border-0 focus:outline-none student-name" placeholder="Student Name">
+                </td>
+                ${subjectCells}
+                <td class="border border-gray-300 px-4 py-2 total-cell">0</td>
+                <td class="border border-gray-300 px-4 py-2 average-cell">0.00</td>
+                <td class="border border-gray-300 px-4 py-2 position-cell">-</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <input type="text" class="w-full border-0 focus:outline-none remarks" placeholder="Remarks">
+                </td>
+                <td class="border border-gray-300 px-4 py-2 no-print">
+                    <button onclick="removeStudent(this)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">Remove</button>
+                </td>
+            `;
+            
+            tbody.appendChild(newRow);
+            calculateAll();
+        }
+
+        function removeStudent(button) {
+            if (confirm('Are you sure you want to remove this student?')) {
+                button.closest('tr').remove();
+                calculateAll();
+            }
+        }
+
+        function addSubject() {
+            const subjectName = prompt('Enter subject name:');
+            if (subjectName && !subjects.includes(subjectName)) {
+                subjects.push(subjectName);
+                updateTableHeaders();
+                addSubjectColumn();
+                calculateAll();
+            }
+        }
+
+        function updateTableHeaders() {
+            const thead = document.querySelector('#gradebook thead tr');
+            thead.innerHTML = `
+                <th class="border border-gray-300 px-4 py-2 text-left">Student Name</th>
+                ${subjects.map(subject => `<th class="border border-gray-300 px-4 py-2 text-left">${subject}</th>`).join('')}
+                <th class="border border-gray-300 px-4 py-2 text-left">Total</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Average</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Position</th>
+                <th class="border border-gray-300 px-4 py-2 text-left">Remarks</th>
+                <th class="border border-gray-300 px-4 py-2 text-left no-print">Actions</th>
+            `;
+        }
+
+        function addSubjectColumn() {
+            const rows = document.querySelectorAll('#gradebookBody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const newCell = document.createElement('td');
+                newCell.className = 'border border-gray-300 px-4 py-2';
+                newCell.innerHTML = '<input type="number" class="w-full border-0 focus:outline-none grade" max="100" min="0" placeholder="0">';
+                
+                // Insert before the total cell (which is at position subjects.length)
+                row.insertBefore(newCell, cells[subjects.length]);
+            });
+        }
+
+        function calculateRowTotal(row) {
+            const gradeInputs = row.querySelectorAll('.grade');
+            const totalCell = row.querySelector('.total-cell');
+            const averageCell = row.querySelector('.average-cell');
+            
+            let total = 0;
+            let validGrades = 0;
+            
+            gradeInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                if (input.value !== '') {
+                    total += value;
+                    validGrades++;
+                }
+            });
+            
+            const average = validGrades > 0 ? total / validGrades : 0;
+            totalCell.textContent = total;
+            averageCell.textContent = average.toFixed(2);
+        }
+
+        function calculateAll() {
+            const rows = document.querySelectorAll('#gradebookBody tr');
+            const studentData = [];
+            
+            // Calculate totals for each student
+            rows.forEach(row => {
+                calculateRowTotal(row);
+                const name = row.querySelector('.student-name').value || 'Unnamed Student';
+                const total = parseFloat(row.querySelector('.total-cell').textContent) || 0;
+                const average = parseFloat(row.querySelector('.average-cell').textContent) || 0;
+                studentData.push({ row, name, total, average });
+            });
+            
+            // Sort by total marks (descending) and assign positions
+            studentData.sort((a, b) => b.total - a.total);
+            studentData.forEach((student, index) => {
+                const positionCell = student.row.querySelector('.position-cell');
+                positionCell.textContent = index + 1;
+            });
+            
+            updateChart();
+            updateStatistics();
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Total Marks',
+                        data: [],
+                        backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: subjects.length * 100
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            const rows = document.querySelectorAll('#gradebookBody tr');
+            const labels = [];
+            const data = [];
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.student-name').value || 'Student';
+                const total = parseFloat(row.querySelector('.total-cell').textContent) || 0;
+                if (name && name !== 'Student') {
+                    labels.push(name);
+                    data.push(total);
+                }
+            });
+            
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.options.scales.y.max = subjects.length * 100;
+            chart.update();
+        }
+
+        function updateStatistics() {
+            const rows = document.querySelectorAll('#gradebookBody tr');
+            let totalStudents = 0;
+            let totalMarks = 0;
+            let highestScore = 0;
+            let lowestScore = subjects.length * 100;
+            let validStudents = 0;
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.student-name').value;
+                const total = parseFloat(row.querySelector('.total-cell').textContent) || 0;
+                
+                if (name && name.trim() !== '') {
+                    totalStudents++;
+                    if (total > 0) {
+                        validStudents++;
+                        totalMarks += total;
+                        highestScore = Math.max(highestScore, total);
+                        lowestScore = Math.min(lowestScore, total);
+                    }
+                }
+            });
+            
+            const classAverage = validStudents > 0 ? totalMarks / validStudents : 0;
+            
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('classAverage').textContent = classAverage.toFixed(2);
+            document.getElementById('highestScore').textContent = validStudents > 0 ? highestScore : 0;
+            document.getElementById('lowestScore').textContent = validStudents > 0 ? lowestScore : 0;
+        }
+
+        function printGrades() {
+            window.print();
+        }
+
+        function downloadCSV() {
+            const rows = document.querySelectorAll('#gradebookBody tr');
+            let csv = 'Student Name,' + subjects.join(',') + ',Total,Average,Position,Remarks\n';
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.student-name').value || '';
+                const grades = Array.from(row.querySelectorAll('.grade')).map(input => input.value || '0');
+                const total = row.querySelector('.total-cell').textContent;
+                const average = row.querySelector('.average-cell').textContent;
+                const position = row.querySelector('.position-cell').textContent;
+                const remarks = row.querySelector('.remarks').value || '';
+                
+                csv += `"${name}",${grades.join(',')},${total},${average},${position},"${remarks}"\n`;
+            });
+            
+            const schoolName = document.getElementById('schoolName').value || 'School';
+            const term = document.getElementById('term').value;
+            const academicYear = document.getElementById('academicYear').value || '2023-2024';
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${schoolName}_${term}_${academicYear}_Grades.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

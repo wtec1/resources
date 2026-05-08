@@ -1,0 +1,1426 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Welfare & Support System - Malawi Secondary Schools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #6c5ce7 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2d3436, #636e72);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+            flex-wrap: wrap;
+        }
+        
+        .tab-button {
+            flex: 1;
+            min-width: 200px;
+            padding: 25px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            position: relative;
+            text-align: center;
+        }
+        
+        .tab-button:hover {
+            background: rgba(116, 185, 255, 0.1);
+            color: #74b9ff;
+            transform: translateY(-2px);
+        }
+        
+        .tab-button.active {
+            color: #74b9ff;
+            background: white;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #74b9ff, #6c5ce7);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .malawi-context {
+            background: linear-gradient(135deg, #e8f8e8, #d4edda);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #28a745;
+        }
+        
+        .malawi-context h4 {
+            color: #155724;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+        
+        .malawi-context p {
+            color: #155724;
+            line-height: 1.6;
+        }
+        
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 2px solid #e9ecef;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-section:hover {
+            border-color: #74b9ff;
+        }
+        
+        .form-section h4 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-section h4 .icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #74b9ff;
+            box-shadow: 0 0 0 4px rgba(116, 185, 255, 0.1);
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .three-column {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .checkbox-item:hover {
+            border-color: #74b9ff;
+            background: #f0f8ff;
+        }
+        
+        .checkbox-item input {
+            margin-right: 12px;
+            width: auto;
+            transform: scale(1.2);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #74b9ff, #6c5ce7);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(116, 185, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(116, 185, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #636e72, #2d3436);
+            margin-left: 15px;
+        }
+        
+        .results, .info-panel {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-left: 5px solid #74b9ff;
+        }
+        
+        .results h3, .info-panel h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+        
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+        }
+        
+        .alert-info {
+            background: #e7f3ff;
+            border-color: #0984e3;
+            color: #0984e3;
+        }
+        
+        .alert-warning {
+            background: #fff8e1;
+            border-color: #ffa726;
+            color: #f57c00;
+        }
+        
+        .alert-success {
+            background: #e8f5e8;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .health-module {
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .health-module:hover {
+            border-color: #74b9ff;
+            box-shadow: 0 10px 25px rgba(116, 185, 255, 0.15);
+        }
+        
+        .health-module h4 {
+            color: #2d3436;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .progress-tracker {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e9ecef;
+            border-radius: 6px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #74b9ff, #6c5ce7);
+            transition: width 0.5s ease;
+        }
+        
+        .life-skills-checklist {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .skill-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-item.completed {
+            border-color: #28a745;
+            background: #e8f5e8;
+        }
+        
+        .urgency-high {
+            border-left: 5px solid #dc3545;
+            background: #f8d7da;
+        }
+        
+        .urgency-medium {
+            border-left: 5px solid #ffc107;
+            background: #fff3cd;
+        }
+        
+        .urgency-low {
+            border-left: 5px solid #28a745;
+            background: #d4edda;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .two-column, .three-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .tab-content {
+                padding: 20px;
+            }
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #ddd, #ccc);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 18px;
+            margin: 15px 0;
+            border: 2px dashed #999;
+        }
+        
+        .resource-link {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #74b9ff;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-link:hover {
+            background: #0984e3;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Student Welfare & Support System</h1>
+            <p>Comprehensive guidance, health education, and life skills development for Malawi secondary school students</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('guidance-forms')">
+                📝 Guidance Forms
+            </button>
+            <button class="tab-button" onclick="showTab('health-education')">
+                🏥 Health Education
+            </button>
+            <button class="tab-button" onclick="showTab('life-skills')">
+                🎯 Life Skills
+            </button>
+        </div>
+        
+        <!-- Guidance Forms Tab -->
+        <div id="guidance-forms" class="tab-content active">
+            <div class="malawi-context">
+                <h4>🇲🇼 Student Support in Malawi Context</h4>
+                <p>This system supports the mental health and guidance needs of Malawian students, considering cultural context, family dynamics, and available local resources including community leaders, religious organizations, and health facilities.</p>
+            </div>
+            
+            <div class="form-section">
+                <h4><span class="icon">👤</span>Student Information & Initial Assessment</h4>
+                
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="student-name-guidance">Student Full Name:</label>
+                        <input type="text" id="student-name-guidance" placeholder="Enter student's full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="student-age">Age:</label>
+                        <input type="number" id="student-age" min="12" max="25" placeholder="Age">
+                    </div>
+                </div>
+                
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="student-class">Class/Form:</label>
+                        <select id="student-class">
+                            <option value="">Select class</option>
+                            <option value="form1">Form 1</option>
+                            <option value="form2">Form 2</option>
+                            <option value="form3">Form 3</option>
+                            <option value="form4">Form 4</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guardian-contact">Guardian Contact:</label>
+                        <input type="tel" id="guardian-contact" placeholder="Phone number">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="primary-language">Primary Language at Home:</label>
+                    <select id="primary-language">
+                        <option value="">Select language</option>
+                        <option value="chichewa">Chichewa</option>
+                        <option value="english">English</option>
+                        <option value="chitumbuka">Chitumbuka</option>
+                        <option value="chiyao">Chiyao</option>
+                        <option value="other">Other local language</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4><span class="icon">🎯</span>Reason for Guidance Session</h4>
+                
+                <div class="form-group">
+                    <label for="referral-source">Referral Source:</label>
+                    <select id="referral-source">
+                        <option value="">How did student come for guidance?</option>
+                        <option value="self-referral">Self-referral</option>
+                        <option value="teacher-referral">Teacher referral</option>
+                        <option value="parent-referral">Parent/Guardian referral</option>
+                        <option value="peer-referral">Peer referral</option>
+                        <option value="counselor-referral">School counselor referral</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Primary Concerns (Select all that apply):</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="academic-stress" value="academic-stress">
+                            <label for="academic-stress">📚 Academic Performance & Study Stress</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="family-issues" value="family-issues">
+                            <label for="family-issues">🏠 Family Problems & Home Environment</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="peer-relationships" value="peer-relationships">
+                            <label for="peer-relationships">👥 Peer Relationships & Bullying</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="emotional-health" value="emotional-health">
+                            <label for="emotional-health">💭 Emotional Health & Depression</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="substance-use" value="substance-use">
+                            <label for="substance-use">🚫 Substance Use & Risky Behavior</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="career-guidance" value="career-guidance">
+                            <label for="career-guidance">🎓 Career & Future Planning</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="health-concerns" value="health-concerns">
+                            <label for="health-concerns">🏥 Health & Sexual Education</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="financial-stress" value="financial-stress">
+                            <label for="financial-stress">💰 Financial Difficulties & School Fees</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="urgency-level">Urgency Level:</label>
+                    <select id="urgency-level">
+                        <option value="">Assess urgency</option>
+                        <option value="high">🔴 High - Immediate intervention needed</option>
+                        <option value="medium">🟡 Medium - Schedule within week</option>
+                        <option value="low">🟢 Low - Regular counseling schedule</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="detailed-description">Detailed Description of Situation:</label>
+                    <textarea id="detailed-description" rows="4" placeholder="Provide detailed information about the student's situation, concerns, and any relevant background information..."></textarea>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4><span class="icon">🤝</span>Support System & Resources</h4>
+                
+                <div class="two-column">
+                    <div class="form-group">
+                        <label for="family-support">Family Support Level:</label>
+                        <select id="family-support">
+                            <option value="">Rate family support</option>
+                            <option value="high">High - Very supportive family</option>
+                            <option value="moderate">Moderate - Some family support</option>
+                            <option value="low">Low - Limited family support</option>
+                            <option value="none">None - No family support</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="peer-support">Peer Support Network:</label>
+                        <select id="peer-support">
+                            <option value="">Rate peer support</option>
+                            <option value="strong">Strong - Good friend network</option>
+                            <option value="moderate">Moderate - Some friends</option>
+                            <option value="weak">Weak - Few friends</option>
+                            <option value="isolated">Isolated - No close friends</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Available Community Resources (Check available options):</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="church-support" value="church-support">
+                            <label for="church-support">⛪ Church/Religious Community</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="health-center" value="health-center">
+                            <label for="health-center">🏥 Local Health Center</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="community-leaders" value="community-leaders">
+                            <label for="community-leaders">👑 Traditional Leaders</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="youth-groups" value="youth-groups">
+                            <label for="youth-groups">👫 Youth Groups/Clubs</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ngo-support" value="ngo-support">
+                            <label for="ngo-support">🤝 NGO/Community Organizations</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="government-services" value="government-services">
+                            <label for="government-services">🏛️ Government Social Services</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="processGuidanceForm()">📝 Process Guidance Assessment</button>
+            <button class="btn btn-secondary" onclick="clearGuidanceForm()">🔄 Clear Form</button>
+            
+            <div id="guidance-results" class="results" style="display: none;">
+                <h3>📋 Guidance Assessment Summary</h3>
+                <div id="guidance-summary"></div>
+            </div>
+        </div>
+        
+        <!-- Health Education Tab -->
+        <div id="health-education" class="tab-content">
+            <div class="malawi-context">
+                <h4>🇲🇼 Health Education for Malawi Students</h4>
+                <p>Culturally appropriate health education addressing key health challenges in Malawi including HIV/AIDS prevention, reproductive health, nutrition, malaria prevention, and mental health awareness.</p>
+            </div>
+            
+            <div class="three-column">
+                <div class="health-module">
+                    <h4>🛡️ HIV/AIDS Prevention & Awareness</h4>
+                    <p>Comprehensive education about HIV/AIDS prevention, testing, and support services available in Malawi.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: HIV Prevention
+                    </div>
+                    <div>
+                        <a href="#" class="resource-link">📊 HIV Statistics Malawi</a>
+                        <a href="#" class="resource-link">🏥 Testing Centers</a>
+                        <a href="#" class="resource-link">📋 Prevention Methods</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="hiv-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('hiv-progress', 25)">Start Module</button>
+                    </div>
+                </div>
+                
+                <div class="health-module">
+                    <h4>🤱 Reproductive Health Education</h4>
+                    <p>Age-appropriate reproductive health information, family planning, and maternal health awareness.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: Reproductive Health
+                    </div>
+                    <div>
+                        <a href="https://youtu.be/CCJvh6m_6a0?t=13" class="resource-link">👶 Family Planning</a>
+                        <a href="https://youtu.be/cC0ECM8vkyM?t=18" class="resource-link">🤱 Maternal Health</a>
+                        <a href="https://youtu.be/Epem9Dwy_as?t=4" class="resource-link">🏥 Health Services</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="reproductive-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('reproductive-progress', 30)">Start Module</button>
+                    </div>
+                </div>
+                
+                <div class="health-module">
+                    <h4>🦟 Malaria Prevention & Treatment</h4>
+                    <p>Essential information about malaria prevention, symptoms recognition, and treatment options in Malawi.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: Malaria Prevention
+                    </div>
+                    <div>
+                        <a href="https://youtu.be/0ssLYYR0wAo?t=2" class="resource-link">🏠 Home Prevention</a>
+                        <a href="https://youtu.be/F9mByIzYc8s?t=10" class="resource-link">🩺 Symptoms Guide</a>
+                        <a href="#" class="resource-link">💊 Treatment Options</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="malaria-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('malaria-progress', 35)">Start Module</button>
+                    </div>
+                </div>
+                
+                <div class="health-module">
+                    <h4>🥗 Nutrition & Food Security</h4>
+                    <p>Understanding balanced nutrition, food safety, and addressing malnutrition using locally available foods.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: Nutrition Basics
+                    </div>
+                    <div>
+                        <a href="#" class="resource-link">🌽 Local Foods Guide</a>
+                        <a href="#" class="resource-link">👶 Child Nutrition</a>
+                        <a href="#" class="resource-link">🥛 Food Safety</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="nutrition-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('nutrition-progress', 40)">Start Module</button>
+                    </div>
+                </div>
+                
+                <div class="health-module">
+                    <h4>🧠 Mental Health & Well-being</h4>
+                    <p>Mental health awareness, stress management, and emotional wellness strategies for students.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: Mental Health
+                    </div>
+                    <div>
+                        <a href="#" class="resource-link">🧘 Stress Management</a>
+                        <a href="#" class="resource-link">💭 Depression Signs</a>
+                        <a href="#" class="resource-link">🤝 Getting Help</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="mental-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('mental-progress', 20)">Start Module</button>
+                    </div>
+                </div>
+                
+                <div class="health-module">
+                    <h4>💧 Water, Sanitation & Hygiene (WASH)</h4>
+                    <p>Essential hygiene practices, safe water use, and sanitation for disease prevention.</p>
+                    <div class="video-placeholder">
+                        📹 Educational Video: WASH Practices
+                    </div>
+                    <div>
+                        <a href="#" class="resource-link">🚿 Personal Hygiene</a>
+                        <a href="#" class="resource-link">💧 Water Safety</a>
+                        <a href="#" class="resource-link">🚽 Sanitation</a>
+                    </div>
+                    <div class="progress-tracker">
+                        <p><strong>Module Progress:</strong></p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%" id="wash-progress"></div>
+                        </div>
+                        <button class="btn" onclick="updateProgress('wash-progress', 45)">Start Module</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <h3>🏥 Malawi Health Resources & Contacts</h3>
+                <div class="alert alert-info">
+                    <h4>Emergency Health Contacts:</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Emergency Services:</strong> 199 or 998</li>
+                        <li><strong>AIDS Helpline:</strong> 80077 (Toll-free)</li>
+                        <li><strong>Mental Health Support:</strong> Contact nearest health center</li>
+                        <li><strong>Gender-based Violence:</strong> 902 (Police hotline)</li>
+                    </ul>
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h5>🏥 Major Health Facilities:</h5>
+                        <ul style="margin-left: 20px;">
+                            <li>Kamuzu Central Hospital (Lilongwe)</li>
+                            <li>Queen Elizabeth Central Hospital (Blantyre)</li>
+                            <li>Mzuzu Central Hospital</li>
+                            <li>Zomba Central Hospital</li>
+                            <li>Local district hospitals and health centers</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5>🤝 Support Organizations:</h5>
+                        <ul style="margin-left: 20px;">
+                            <li>NAC (National AIDS Commission)</li>
+                            <li>Banja La Mtsogolo (Family planning)</li>
+                            <li>Partners in Hope</li>
+                            <li>Malawi Red Cross Society</li>
+                            <li>Local NGOs and community health workers</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Life Skills Tab -->
+        <div id="life-skills" class="tab-content">
+            <div class="malawi-context">
+                <h4>🇲🇼 Life Skills for Malawi Youth</h4>
+                <p>Essential life skills training designed for Malawian secondary school students, focusing on practical skills for daily life, relationships, decision-making, and preparing for adulthood in the Malawi context.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="life-skills-student">Student Name:</label>
+                <input type="text" id="life-skills-student" placeholder="Enter student's name">
+            </div>
+            
+            <div class="form-group">
+                <label for="skills-module">Select Life Skills Module:</label>
+                <select id="skills-module" onchange="loadLifeSkillsModule()">
+                    <option value="">Choose a life skills area</option>
+                    <option value="communication">🗣️ Communication & Social Skills</option>
+                    <option value="decision-making">🤔 Decision Making & Problem Solving</option>
+                    <option value="emotional">😊 Emotional Intelligence & Self-Awareness</option>
+                    <option value="financial">💰 Financial Literacy & Money Management</option>
+                    <option value="relationships">❤️ Healthy Relationships & Family Life</option>
+                    <option value="leadership">👑 Leadership & Teamwork</option>
+                    <option value="career">🎯 Career Preparation & Goal Setting</option>
+                    <option value="health">💪 Personal Health & Self-Care</option>
+                </select>
+            </div>
+            
+            <div id="life-skills-content" class="info-panel" style="display: none;">
+                <div id="module-content"></div>
+            </div>
+            
+            <div id="skills-checklist-container" style="display: none;">
+                <h3>📋 Skills Development Checklist</h3>
+                <div id="skills-checklist" class="life-skills-checklist"></div>
+                
+                <button class="btn" onclick="updateLifeSkillsProgress()">✅ Update Progress</button>
+                <button class="btn btn-secondary" onclick="generateLifeSkillsReport()">📊 Generate Report</button>
+            </div>
+            
+            <div id="life-skills-results" class="results" style="display: none;">
+                <h3>📈 Life Skills Development Report</h3>
+                <div id="life-skills-summary"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lifeSkillsModules = {
+            'communication': {
+                title: '🗣️ Communication & Social Skills',
+                description: 'Develop effective communication skills for personal and professional success in Malawi',
+                video: '📹 Communication Skills in Chichewa & English',
+                skills: [
+                    'Active listening techniques',
+                    'Speaking confidently in public',
+                    'Non-verbal communication awareness',
+                    'Effective written communication',
+                    'Cross-cultural communication',
+                    'Conflict resolution through dialogue',
+                    'Using appropriate language in different contexts',
+                    'Building rapport with others'
+                ],
+                activities: [
+                    'Practice conversations in both Chichewa and English',
+                    'Role-play different social situations',
+                    'Join school debate or drama club',
+                    'Practice giving presentations to classmates'
+                ],
+                resources: [
+                    '📚 Communication workbooks',
+                    '🎭 Drama and role-play activities',
+                    '🗣️ Public speaking clubs',
+                    '📝 Letter writing templates'
+                ]
+            },
+            'decision-making': {
+                title: '🤔 Decision Making & Problem Solving',
+                description: 'Learn systematic approaches to making good decisions and solving problems',
+                video: '📹 Critical Thinking and Decision Making',
+                skills: [
+                    'Identifying problems clearly',
+                    'Gathering relevant information',
+                    'Considering multiple solutions',
+                    'Evaluating consequences',
+                    'Making informed decisions',
+                    'Learning from mistakes',
+                    'Setting priorities effectively',
+                    'Using traditional wisdom in modern contexts'
+                ],
+                activities: [
+                    'Case study analysis of real-life scenarios',
+                    'Decision trees for complex choices',
+                    'Group problem-solving exercises',
+                    'Personal decision journal keeping'
+                ],
+                resources: [
+                    '🧠 Critical thinking exercises',
+                    '📊 Decision-making frameworks',
+                    '📖 Problem-solving case studies',
+                    '🤝 Peer consultation groups'
+                ]
+            },
+            'emotional': {
+                title: '😊 Emotional Intelligence & Self-Awareness',
+                description: 'Understand and manage emotions for better relationships and personal well-being',
+                video: '📹 Understanding Emotions and Self-Control',
+                skills: [
+                    'Recognizing own emotions',
+                    'Understanding others\' feelings',
+                    'Managing stress and anxiety',
+                    'Controlling anger appropriately',
+                    'Building self-confidence',
+                    'Showing empathy and compassion',
+                    'Handling disappointment',
+                    'Celebrating achievements appropriately'
+                ],
+                activities: [
+                    'Daily emotion tracking and reflection',
+                    'Stress management techniques practice',
+                    'Empathy-building exercises',
+                    'Self-affirmation and goal visualization'
+                ],
+                resources: [
+                    '📝 Emotion tracking journals',
+                    '🧘 Mindfulness and relaxation guides',
+                    '🤗 Peer support groups',
+                    '📖 Stories about emotional resilience'
+                ]
+            },
+            'financial': {
+                title: '💰 Financial Literacy & Money Management',
+                description: 'Essential money skills for managing finances in the Malawi economy',
+                video: '📹 Managing Money and Savings in Malawi',
+                skills: [
+                    'Understanding Malawi Kwacha and currency',
+                    'Creating and following budgets',
+                    'Saving money effectively',
+                    'Understanding banking services',
+                    'Avoiding debt and financial traps',
+                    'Planning for future expenses',
+                    'Understanding mobile money (Airtel Money, TNM Mpamba)',
+                    'Basic entrepreneurship and income generation'
+                ],
+                activities: [
+                    'Create personal monthly budget',
+                    'Practice using mobile money services',
+                    'Visit local bank to learn about accounts',
+                    'Plan savings for school fees or goals'
+                ],
+                resources: [
+                    '💳 Banking guides for students',
+                    '📱 Mobile money tutorials',
+                    '💰 Savings challenge templates',
+                    '📈 Basic investment education'
+                ]
+            },
+            'relationships': {
+                title: '❤️ Healthy Relationships & Family Life',
+                description: 'Build healthy relationships while respecting Malawian cultural values',
+                video: '📹 Healthy Relationships and Family Values',
+                skills: [
+                    'Building trust and respect',
+                    'Understanding healthy vs. unhealthy relationships',
+                    'Family responsibility and respect for elders',
+                    'Friendship skills and peer relationships',
+                    'Conflict resolution in relationships',
+                    'Understanding consent and boundaries',
+                    'Balancing tradition and modern relationships',
+                    'Supporting family and community'
+                ],
+                activities: [
+                    'Family tree and relationship mapping',
+                    'Role-play healthy communication scenarios',
+                    'Community service projects',
+                    'Discussion of cultural values and modern life'
+                ],
+                resources: [
+                    '👨‍👩‍👧‍👦 Family communication guides',
+                    '🤝 Friendship building activities',
+                    '📚 Cultural values and modern life',
+                    '💬 Peer discussion groups'
+                ]
+            },
+            'leadership': {
+                title: '👑 Leadership & Teamwork',
+                description: 'Develop leadership skills for school, community, and future careers',
+                video: '📹 Leadership Skills for Young Malawians',
+                skills: [
+                    'Understanding different leadership styles',
+                    'Working effectively in teams',
+                    'Motivating and inspiring others',
+                    'Delegating responsibilities',
+                    'Leading by example',
+                    'Organizing events and activities',
+                    'Community leadership and service',
+                    'Balancing leadership with humility'
+                ],
+                activities: [
+                    'Lead a school project or event',
+                    'Organize community service activity',
+                    'Practice team-building exercises',
+                    'Shadow community leaders'
+                ],
+                resources: [
+                    '👥 Team building activity guides',
+                    '🎯 Project management basics',
+                    '🏆 Leadership role examples',
+                    '🤝 Community service opportunities'
+                ]
+            },
+            'career': {
+                title: '🎯 Career Preparation & Goal Setting',
+                description: 'Prepare for career success and set achievable life goals',
+                video: '📹 Career Planning in Malawi Context',
+                skills: [
+                    'Self-assessment of interests and abilities',
+                    'Setting SMART goals',
+                    'Understanding job market in Malawi',
+                    'Developing work readiness skills',
+                    'Creating action plans',
+                    'Building professional networks',
+                    'Preparing for interviews',
+                    'Continuous learning mindset'
+                ],
+                activities: [
+                    'Complete career assessment tests',
+                    'Create 5-year life plan',
+                    'Interview professionals in various fields',
+                    'Develop personal mission statement'
+                ],
+                resources: [
+                    '📋 Career assessment tools',
+                    '🎯 Goal setting templates',
+                    '💼 Interview preparation guides',
+                    '🌟 Success stories from Malawi'
+                ]
+            },
+            'health': {
+                title: '💪 Personal Health & Self-Care',
+                description: 'Maintain physical and mental health throughout life',
+                video: '📹 Personal Health and Wellness',
+                skills: [
+                    'Understanding nutrition and balanced diet',
+                    'Regular exercise and physical fitness',
+                    'Personal hygiene and cleanliness',
+                    'Stress management techniques',
+                    'Getting adequate sleep and rest',
+                    'Avoiding harmful substances',
+                    'Managing chronic conditions',
+                    'Mental health awareness and care'
+                ],
+                activities: [
+                    'Create personal fitness routine',
+                    'Plan balanced meals using local foods',
+                    'Practice stress reduction techniques',
+                    'Track sleep and energy patterns'
+                ],
+                resources: [
+                    '🏃‍♂️ Exercise routines for students',
+                    '🥗 Nutrition guides using local foods',
+                    '😴 Sleep hygiene tips',
+                    '🧘‍♀️ Stress management techniques'
+                ]
+            }
+        };
+
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function processGuidanceForm() {
+            const studentName = document.getElementById('student-name-guidance').value;
+            const age = document.getElementById('student-age').value;
+            const urgencyLevel = document.getElementById('urgency-level').value;
+            
+            if (!studentName || !age || !urgencyLevel) {
+                alert('Please fill in at least the student name, age, and urgency level');
+                return;
+            }
+            
+            const concerns = [];
+            document.querySelectorAll('#guidance-forms input[type="checkbox"]:checked').forEach(checkbox => {
+                concerns.push(checkbox.nextElementSibling.textContent.trim());
+            });
+            
+            const referralSource = document.getElementById('referral-source').value;
+            const familySupport = document.getElementById('family-support').value;
+            const peerSupport = document.getElementById('peer-support').value;
+            const detailedDescription = document.getElementById('detailed-description').value;
+            
+            generateGuidanceReport(studentName, age, urgencyLevel, concerns, referralSource, familySupport, peerSupport, detailedDescription);
+        }
+        
+        function generateGuidanceReport(studentName, age, urgencyLevel, concerns, referralSource, familySupport, peerSupport, description) {
+            let urgencyClass = '';
+            let urgencyText = '';
+            let recommendations = '';
+            
+            switch(urgencyLevel) {
+                case 'high':
+                    urgencyClass = 'urgency-high';
+                    urgencyText = '🔴 HIGH PRIORITY - Immediate intervention required';
+                    recommendations = `
+                        <h5>Immediate Actions Required:</h5>
+                        <ul>
+                            <li>Schedule counseling session within 24-48 hours</li>
+                            <li>Contact parents/guardians immediately</li>
+                            <li>Consider referral to mental health professional</li>
+                            <li>Ensure student safety and monitor closely</li>
+                            <li>Document all interactions and interventions</li>
+                        </ul>
+                    `;
+                    break;
+                case 'medium':
+                    urgencyClass = 'urgency-medium';
+                    urgencyText = '🟡 MEDIUM PRIORITY - Schedule within one week';
+                    recommendations = `
+                        <h5>Recommended Actions:</h5>
+                        <ul>
+                            <li>Schedule counseling session within 5-7 days</li>
+                            <li>Inform relevant teachers about student needs</li>
+                            <li>Contact parents/guardians to discuss concerns</li>
+                            <li>Consider peer support or group counseling</li>
+                            <li>Monitor progress and schedule follow-up</li>
+                        </ul>
+                    `;
+                    break;
+                case 'low':
+                    urgencyClass = 'urgency-low';
+                    urgencyText = '🟢 LOW PRIORITY - Regular counseling schedule';
+                    recommendations = `
+                        <h5>Support Actions:</h5>
+                        <ul>
+                            <li>Schedule regular counseling sessions</li>
+                            <li>Provide relevant educational resources</li>
+                            <li>Connect with peer support networks</li>
+                            <li>Monitor academic and social progress</li>
+                            <li>Encourage participation in positive activities</li>
+                        </ul>
+                    `;
+                    break;
+            }
+            
+            const html = `
+                <div class="card ${urgencyClass}">
+                    <h4>📋 Guidance Assessment for ${studentName}</h4>
+                    
+                    <div class="two-column">
+                        <div>
+                            <p><strong>Age:</strong> ${age} years</p>
+                            <p><strong>Referral Source:</strong> ${referralSource || 'Not specified'}</p>
+                            <p><strong>Family Support:</strong> ${familySupport || 'Not assessed'}</p>
+                            <p><strong>Peer Support:</strong> ${peerSupport || 'Not assessed'}</p>
+                        </div>
+                        <div>
+                            <p><strong>Assessment Date:</strong> ${new Date().toLocaleDateString()}</p>
+                            <p><strong>Priority Level:</strong> ${urgencyText}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 20px 0;">
+                        <h5>Primary Concerns Identified:</h5>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                            ${concerns.map(concern => `<span style="background: #74b9ff; color: white; padding: 5px 15px; border-radius: 15px; font-size: 14px;">${concern}</span>`).join('')}
+                        </div>
+                    </div>
+                    
+                    ${description ? `
+                        <div style="margin: 20px 0;">
+                            <h5>Detailed Description:</h5>
+                            <p style="background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #74b9ff;">${description}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        ${recommendations}
+                    </div>
+                    
+                    <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h5>🇲🇼 Available Resources in Malawi:</h5>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Mental Health:</strong> Contact nearest health center or Kamuzu Central Hospital</li>
+                            <li><strong>Counseling Services:</strong> Local NGOs, religious organizations</li>
+                            <li><strong>Academic Support:</strong> Peer tutoring, teacher consultation</li>
+                            <li><strong>Family Issues:</strong> Community leaders, social welfare services</li>
+                            <li><strong>Emergency:</strong> Police (199), Health Emergency (998)</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('guidance-summary').innerHTML = html;
+            document.getElementById('guidance-results').style.display = 'block';
+        }
+        
+        function clearGuidanceForm() {
+            if (confirm('Are you sure you want to clear all form data?')) {
+                document.querySelectorAll('#guidance-forms input, #guidance-forms select, #guidance-forms textarea').forEach(field => {
+                    if (field.type === 'checkbox') {
+                        field.checked = false;
+                    } else {
+                        field.value = '';
+                    }
+                });
+                document.getElementById('guidance-results').style.display = 'none';
+            }
+        }
+        
+        function updateProgress(progressId, increment) {
+            const progressBar = document.getElementById(progressId);
+            let currentWidth = parseInt(progressBar.style.width) || 0;
+            let newWidth = Math.min(currentWidth + increment, 100);
+            progressBar.style.width = newWidth + '%';
+            
+            // Update button text based on progress
+            const button = event.target;
+            if (newWidth >= 100) {
+                button.textContent = '✅ Module Complete';
+                button.style.background = '#28a745';
+            } else if (newWidth > 0) {
+                button.textContent = `Continue (${newWidth}%)`;
+            }
+        }
+        
+        function loadLifeSkillsModule() {
+            const moduleKey = document.getElementById('skills-module').value;
+            if (!moduleKey) {
+                document.getElementById('life-skills-content').style.display = 'none';
+                document.getElementById('skills-checklist-container').style.display = 'none';
+                return;
+            }
+            
+            const module = lifeSkillsModules[moduleKey];
+            
+            const html = `
+                <h3>${module.title}</h3>
+                <p style="font-size: 18px; margin-bottom: 20px;">${module.description}</p>
+                
+                <div class="video-placeholder">
+                    ${module.video}
+                </div>
+                
+                <div class="two-column">
+                    <div>
+                        <h4>🎯 Key Skills to Develop:</h4>
+                        <ul style="margin-left: 20px; line-height: 2;">
+                            ${module.skills.map(skill => `<li>${skill}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📚 Learning Resources:</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            ${module.resources.map(resource => `<a href="#" class="resource-link">${resource}</a>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4>🎯 Practical Activities:</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        ${module.activities.map(activity => `<li>${activity}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('module-content').innerHTML = html;
+            document.getElementById('life-skills-content').style.display = 'block';
+            
+            loadSkillsChecklist(moduleKey, module.skills);
+        }
+        
+        function loadSkillsChecklist(moduleKey, skills) {
+            let html = '';
+            
+            skills.forEach((skill, index) => {
+                html += `
+                    <div class="skill-item" id="skill-item-${index}">
+                        <input type="checkbox" id="skill-check-${index}" onchange="toggleSkillItem(${index})">
+                        <label for="skill-check-${index}" style="margin-left: 15px; flex: 1;">${skill}</label>
+                        <select id="skill-level-${index}" style="margin-left: 15px; width: 150px;">
+                            <option value="not-started">Not Started</option>
+                            <option value="learning">Learning</option>
+                            <option value="practicing">Practicing</option>
+                            <option value="competent">Competent</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('skills-checklist').innerHTML = html;
+            document.getElementById('skills-checklist-container').style.display = 'block';
+        }
+        
+        function toggleSkillItem(index) {
+            const skillItem = document.getElementById(`skill-item-${index}`);
+            const checkbox = document.getElementById(`skill-check-${index}`);
+            
+            if (checkbox.checked) {
+                skillItem.classList.add('completed');
+            } else {
+                skillItem.classList.remove('completed');
+            }
+        }
+        
+        function updateLifeSkillsProgress() {
+            const studentName = document.getElementById('life-skills-student').value;
+            if (!studentName) {
+                alert('Please enter student name first');
+                return;
+            }
+            
+            alert(`✅ Progress updated for ${studentName}! Great work on developing these important life skills.`);
+        }
+        
+        function generateLifeSkillsReport() {
+            const studentName = document.getElementById('life-skills-student').value;
+            const moduleKey = document.getElementById('skills-module').value;
+            
+            if (!studentName || !moduleKey) {
+                alert('Please enter student name and select a module first');
+                return;
+            }
+            
+            const module = lifeSkillsModules[moduleKey];
+            const completedSkills = [];
+            const inProgressSkills = [];
+            
+            module.skills.forEach((skill, index) => {
+                const checkbox = document.getElementById(`skill-check-${index}`);
+                const level = document.getElementById(`skill-level-${index}`).value;
+                
+                if (checkbox && checkbox.checked) {
+                    completedSkills.push({skill, level});
+                } else if (level !== 'not-started') {
+                    inProgressSkills.push({skill, level});
+                }
+            });
+            
+            const completionRate = ((completedSkills.length / module.skills.length) * 100).toFixed(1);
+            
+            const html = `
+                <div class="card">
+                    <h4>📊 Life Skills Progress Report: ${studentName}</h4>
+                    <p><strong>Module:</strong> ${module.title}</p>
+                    <p><strong>Report Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${completionRate}%"></div>
+                    </div>
+                    <p><strong>Overall Progress:</strong> ${completionRate}% Complete</p>
+                    
+                    <div class="two-column">
+                        <div>
+                            <h5>✅ Completed Skills (${completedSkills.length}):</h5>
+                            <ul style="margin-left: 20px;">
+                                ${completedSkills.map(item => `<li>${item.skill} <em>(${item.level})</em></li>`).join('') || '<li>No skills marked as complete yet</li>'}
+                            </ul>
+                        </div>
+                        <div>
+                            <h5>📈 Skills in Progress (${inProgressSkills.length}):</h5>
+                            <ul style="margin-left: 20px;">
+                                ${inProgressSkills.map(item => `<li>${item.skill} <em>(${item.level})</em></li>`).join('') || '<li>No skills currently in progress</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <h5>🎯 Recommendations for Continued Growth:</h5>
+                        ${getLifeSkillsRecommendations(completionRate, completedSkills.length)}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('life-skills-summary').innerHTML = html;
+            document.getElementById('life-skills-results').style.display = 'block';
+        }
+        
+        function getLifeSkillsRecommendations(completionRate, completedCount) {
+            if (completionRate >= 80) {
+                return `
+                    <p>🌟 <strong>Excellent Progress!</strong> You're demonstrating strong competency in this life skills area.</p>
+                    <p>💡 <strong>Next Steps:</strong> Consider mentoring other students or taking on leadership roles to further develop these skills.</p>
+                    <p>🚀 <strong>Challenge:</strong> Apply these skills in real-world situations and seek feedback for continuous improvement.</p>
+                `;
+            } else if (completionRate >= 50) {
+                return `
+                    <p>📈 <strong>Good Progress!</strong> You're building solid foundations in these important life skills.</p>
+                    <p>🎯 <strong>Focus:</strong> Continue practicing the skills you've started and try to complete the remaining ones.</p>
+                    <p>💪 <strong>Goal:</strong> Aim to reach 80% completion in the next few weeks through consistent practice.</p>
+                `;
+            } else {
+                return `
+                    <p>🌱 <strong>Getting Started!</strong> Every expert was once a beginner - keep building these essential skills.</p>
+                    <p>📚 <strong>Action Plan:</strong> Focus on 2-3 skills at a time and practice them regularly.</p>
+                    <p>🤝 <strong>Support:</strong> Ask teachers, family members, or friends to help you practice these skills.</p>
+                `;
+            }
+        }
+        
+        // Auto-save functionality
+        let userData = {};
+        
+        function saveUserData() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'checkbox') {
+                    userData[input.id] = input.checked;
+                } else {
+                    userData[input.id] = input.value;
+                }
+            });
+        }
+        
+        // Save data when form fields change
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('change', saveUserData);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTrack - Examination & Certification Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-primary">🎓 EduTrack</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="flex space-x-8">
+                        <a href="#prep" class="text-gray-700 hover:text-primary transition-colors">MSCE/JCE Prep</a>
+                        <a href="#papers" class="text-gray-700 hover:text-primary transition-colors">Create Papers</a>
+                        <a href="#tracking" class="text-gray-700 hover:text-primary transition-colors">CA Tracking</a>
+                    </div>
+                </div>
+                <button id="mobile-menu-btn" class="md:hidden p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#prep" class="block px-3 py-2 text-gray-700 hover:text-primary">MSCE/JCE Prep</a>
+                <a href="#papers" class="block px-3 py-2 text-gray-700 hover:text-primary">Create Papers</a>
+                <a href="#tracking" class="block px-3 py-2 text-gray-700 hover:text-primary">CA Tracking</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-primary to-secondary text-white py-12 lg:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-5xl font-bold mb-6">Examination & Certification Platform</h2>
+                <p class="text-xl md:text-2xl mb-8 opacity-90">Master your MSCE/JCE exams with interactive tools and comprehensive tracking</p>
+                <button onclick="showSection('prep')" class="bg-white text-primary px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors">
+                    Start Learning
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MSCE/JCE Prep Section -->
+    <section id="prep" class="py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">🎓 MSCE/JCE Preparation Tools</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Interactive Quizzes -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-4xl mb-4">📝</div>
+                    <h4 class="text-xl font-bold mb-3">Interactive Quizzes</h4>
+                    <p class="text-gray-600 mb-4">Practice with subject-specific quizzes designed to test your knowledge and understanding.</p>
+                    <button onclick="startQuiz()" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition-colors">Start Quiz</button>
+                </div>
+                
+                <!-- Timed Practice Tests -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-4xl mb-4">⏱️</div>
+                    <h4 class="text-xl font-bold mb-3">Timed Practice Tests</h4>
+                    <p class="text-gray-600 mb-4">Simulate real exam conditions with our timed practice tests.</p>
+                    <button onclick="startTimedTest()" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition-colors">Start Test</button>
+                </div>
+                
+                <!-- Progress Tracking -->
+                <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                    <div class="text-primary text-4xl mb-4">📊</div>
+                    <h4 class="text-xl font-bold mb-3">Progress Tracking</h4>
+                    <p class="text-gray-600 mb-4">Monitor your improvement with detailed analytics and progress reports.</p>
+                    <button onclick="viewProgress()" class="w-full bg-primary text-white py-2 rounded-lg hover:bg-secondary transition-colors">View Progress</button>
+                </div>
+            </div>
+
+            <!-- Quiz Interface -->
+            <div id="quiz-interface" class="hidden mt-12 bg-white rounded-lg shadow-lg p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="text-2xl font-bold">Mathematics Quiz</h4>
+                    <div class="text-lg font-semibold">Question <span id="current-q">1</span> of <span id="total-q">5</span></div>
+                </div>
+                <div id="question-container" class="mb-8">
+                    <p class="text-lg mb-6">What is the value of x in the equation: 2x + 5 = 13?</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="a" class="mr-3">
+                            <span>A) x = 3</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="b" class="mr-3">
+                            <span>B) x = 4</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="c" class="mr-3">
+                            <span>C) x = 5</span>
+                        </label>
+                        <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                            <input type="radio" name="answer" value="d" class="mr-3">
+                            <span>D) x = 6</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex justify-between">
+                    <button onclick="previousQuestion()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Previous</button>
+                    <button onclick="nextQuestion()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-secondary">Next</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Past Papers Section -->
+    <section id="papers" class="bg-gray-100 py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">📝 Past Paper Creator</h3>
+            
+            <!-- Tab Navigation -->
+            <div class="flex justify-center mb-8">
+                <div class="flex bg-white rounded-lg shadow-md p-1">
+                    <button id="create-tab" onclick="showTab('create')" class="px-6 py-2 rounded-lg bg-primary text-white font-medium">Create Paper</button>
+                    <button id="browse-tab" onclick="showTab('browse')" class="px-6 py-2 rounded-lg text-gray-600 hover:text-primary font-medium">Browse Created</button>
+                </div>
+            </div>
+
+            <!-- Create Paper Tab -->
+            <div id="create-paper-tab" class="bg-white rounded-lg shadow-lg p-8">
+                <h4 class="text-xl font-bold mb-6">✍️ Create New Examination Paper</h4>
+                
+                <!-- Paper Details Form -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Subject</label>
+                        <input id="paper-subject" type="text" placeholder="e.g., Mathematics" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Paper Title</label>
+                        <input id="paper-title" type="text" placeholder="e.g., Algebra & Geometry Test" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">Duration (minutes)</label>
+                        <input id="paper-duration" type="number" placeholder="e.g., 120" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                    </div>
+                </div>
+
+                <!-- Instructions Section -->
+                <div class="mb-8">
+                    <label class="block text-sm font-medium mb-2">Paper Instructions</label>
+                    <textarea id="paper-instructions" rows="3" placeholder="Enter general instructions for students..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">Answer all questions in the spaces provided.
+                    Show all working clearly.
+                    Calculators are allowed.</textarea>
+                </div>
+
+                <!-- Questions Section -->
+                <div class="mb-8">
+
+                     <div id="questions-container">
+                        <!-- Questions will be added here -->
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h5 class="text-lg font-semibold">Questions</h5>
+                        <button onclick="addQuestion()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">+ Add Question</button>
+                    </div>
+                   
+                </div>
+
+                <!-- Generate Paper Button -->
+                <div class="flex gap-4">
+                    <button onclick="previewPaper()" class="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                        👁️ Preview Paper
+                    </button>
+                    <button onclick="savePaper()" class="flex-1 bg-primary text-white py-3 px-6 rounded-lg hover:bg-secondary transition-colors">
+                        💾 Save Paper
+                    </button>
+                    <button onclick="generatePaperPDF()" class="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors">
+                        📄 Generate PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Browse Papers Tab -->
+            <div id="browse-papers-tab" class="hidden bg-white rounded-lg shadow-lg p-8">
+                <h4 class="text-xl font-bold mb-6">📚 Created Papers Library</h4>
+                <div id="created-papers-list" class="space-y-4">
+                    <p class="text-gray-500 text-center py-8">No papers created yet. Use the "Create Paper" tab to add your first examination paper.</p>
+                </div>
+            </div>
+
+            <!-- Paper Preview Modal -->
+            <div id="paper-preview-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="text-xl font-bold">Paper Preview</h4>
+                            <button onclick="closePreview()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                        </div>
+                        <div id="preview-content" class="border-2 border-gray-300 p-6 bg-white min-h-96">
+                            <!-- Preview content will appear here -->
+                        </div>
+                        <div class="flex gap-4 mt-6">
+                            <button onclick="printPreview()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">🖨️ Print</button>
+                            <button onclick="closePreview()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CA Tracking Section -->
+    <section id="tracking" class="py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">📈 Continuous Assessment Tracking</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Digital Gradebook -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h4 class="text-xl font-bold mb-6 flex items-center">
+                        📊 Digital Gradebook
+                    </h4>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left py-2">Subject</th>
+                                    <th class="text-center py-2">CA1</th>
+                                    <th class="text-center py-2">CA2</th>
+                                    <th class="text-center py-2">CA3</th>
+                                    <th class="text-center py-2">Average</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gradebook-table">
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium">Mathematics</td>
+                                    <td class="text-center py-2">85</td>
+                                    <td class="text-center py-2">78</td>
+                                    <td class="text-center py-2">92</td>
+                                    <td class="text-center py-2 font-semibold text-green-600">85.0</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium">English</td>
+                                    <td class="text-center py-2">76</td>
+                                    <td class="text-center py-2">82</td>
+                                    <td class="text-center py-2">79</td>
+                                    <td class="text-center py-2 font-semibold text-green-600">79.0</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="py-2 font-medium">Science</td>
+                                    <td class="text-center py-2">88</td>
+                                    <td class="text-center py-2">91</td>
+                                    <td class="text-center py-2">87</td>
+                                    <td class="text-center py-2 font-semibold text-green-600">88.7</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button onclick="addGrade()" class="w-full mt-4 bg-primary text-white py-2 rounded-lg hover:bg-secondary transition-colors">
+                        Add New Grade
+                    </button>
+                </div>
+
+                <!-- Progress Charts -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h4 class="text-xl font-bold mb-6 flex items-center">
+                        📈 Progress Charts
+                    </h4>
+                    <div class="space-y-6">
+                        <!-- Mathematics Progress -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Mathematics</span>
+                                <span class="text-sm text-gray-600">85.0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div class="bg-blue-600 h-4 rounded-full transition-all duration-300" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- English Progress -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">English</span>
+                                <span class="text-sm text-gray-600">79.0%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div class="bg-green-600 h-4 rounded-full transition-all duration-300" style="width: 79%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Science Progress -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Science</span>
+                                <span class="text-sm text-gray-600">88.7%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-4">
+                                <div class="bg-purple-600 h-4 rounded-full transition-all duration-300" style="width: 88.7%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Overall Average -->
+                        <div class="pt-4 border-t">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-lg">Overall Average</span>
+                                <span class="text-lg font-bold text-primary">84.2%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-6">
+                                <div class="bg-gradient-to-r from-primary to-secondary h-6 rounded-full transition-all duration-300" style="width: 84.2%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold mb-4">🎓 EduTrack</h3>
+                <p class="mb-4">Your comprehensive examination and certification platform</p>
+                <p class="text-gray-400 text-sm">&copy; 2024 EduTrack. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Quiz functionality
+        let currentQuestion = 1;
+        const totalQuestions = 5;
+        let userAnswers = [];
+        
+        const questions = [
+            {
+                question: "What is the value of x in the equation: 2x + 5 = 13?",
+                options: {
+                    a: "x = 3",
+                    b: "x = 4", 
+                    c: "x = 5",
+                    d: "x = 6"
+                },
+                correct: "b"
+            },
+            {
+                question: "Which of the following is the correct formula for the area of a circle?",
+                options: {
+                    a: "A = πr",
+                    b: "A = 2πr",
+                    c: "A = πr²", 
+                    d: "A = πd²"
+                },
+                correct: "c"
+            },
+            {
+                question: "What is 15% of 200?",
+                options: {
+                    a: "25",
+                    b: "30",
+                    c: "35",
+                    d: "40"
+                },
+                correct: "b"
+            },
+            {
+                question: "If a triangle has angles of 60° and 70°, what is the third angle?",
+                options: {
+                    a: "40°",
+                    b: "50°",
+                    c: "60°",
+                    d: "70°"
+                },
+                correct: "b"
+            },
+            {
+                question: "What is the square root of 144?",
+                options: {
+                    a: "11",
+                    b: "12",
+                    c: "13", 
+                    d: "14"
+                },
+                correct: "b"
+            }
+        ];
+
+        function loadQuestion(questionNum) {
+            const q = questions[questionNum - 1];
+            const questionContainer = document.getElementById('question-container');
+            
+            questionContainer.innerHTML = `
+                <p class="text-lg mb-6">${q.question}</p>
+                <div class="space-y-3">
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="answer" value="a" class="mr-3" ${userAnswers[questionNum - 1] === 'a' ? 'checked' : ''}>
+                        <span>A) ${q.options.a}</span>
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="answer" value="b" class="mr-3" ${userAnswers[questionNum - 1] === 'b' ? 'checked' : ''}>
+                        <span>B) ${q.options.b}</span>
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="answer" value="c" class="mr-3" ${userAnswers[questionNum - 1] === 'c' ? 'checked' : ''}>
+                        <span>C) ${q.options.c}</span>
+                    </label>
+                    <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                        <input type="radio" name="answer" value="d" class="mr-3" ${userAnswers[questionNum - 1] === 'd' ? 'checked' : ''}>
+                        <span>D) ${q.options.d}</span>
+                    </label>
+                </div>
+            `;
+        }
+
+        function saveCurrentAnswer() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (selectedAnswer) {
+                userAnswers[currentQuestion - 1] = selectedAnswer.value;
+            }
+        }
+
+        function startQuiz() {
+            currentQuestion = 1;
+            userAnswers = [];
+            document.getElementById('current-q').textContent = currentQuestion;
+            document.getElementById('total-q').textContent = totalQuestions;
+            loadQuestion(currentQuestion);
+            document.getElementById('quiz-interface').classList.remove('hidden');
+            document.getElementById('quiz-interface').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function startTimedTest() {
+            alert('Starting timed practice test... Timer: 60 minutes');
+            startQuiz();
+        }
+
+        function viewProgress() {
+            document.getElementById('tracking').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function nextQuestion() {
+            saveCurrentAnswer();
+            
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                document.getElementById('current-q').textContent = currentQuestion;
+                loadQuestion(currentQuestion);
+            } else {
+                // Calculate score
+                let score = 0;
+                for (let i = 0; i < totalQuestions; i++) {
+                    if (userAnswers[i] === questions[i].correct) {
+                        score++;
+                    }
+                }
+                alert(`Quiz completed! Your score: ${score}/${totalQuestions} (${Math.round((score/totalQuestions) * 100)}%)`);
+                document.getElementById('quiz-interface').classList.add('hidden');
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                saveCurrentAnswer();
+                currentQuestion--;
+                document.getElementById('current-q').textContent = currentQuestion;
+                loadQuestion(currentQuestion);
+            }
+        }
+
+        // Past Paper Creator functionality
+        let createdPapers = [];
+        let questionCount = 0;
+        let activeQuestions = new Set(); // Track which questions are currently active
+
+        function showTab(tabName) {
+            if (tabName === 'create') {
+                document.getElementById('create-paper-tab').classList.remove('hidden');
+                document.getElementById('browse-papers-tab').classList.add('hidden');
+                document.getElementById('create-tab').classList.add('bg-primary', 'text-white');
+                document.getElementById('create-tab').classList.remove('text-gray-600');
+                document.getElementById('browse-tab').classList.remove('bg-primary', 'text-white');
+                document.getElementById('browse-tab').classList.add('text-gray-600');
+            } else {
+                document.getElementById('create-paper-tab').classList.add('hidden');
+                document.getElementById('browse-papers-tab').classList.remove('hidden');
+                document.getElementById('browse-tab').classList.add('bg-primary', 'text-white');
+                document.getElementById('browse-tab').classList.remove('text-gray-600');
+                document.getElementById('create-tab').classList.remove('bg-primary', 'text-white');
+                document.getElementById('create-tab').classList.add('text-gray-600');
+                updateBrowseTab();
+            }
+        }
+
+        function addQuestion() {
+            questionCount++;
+            activeQuestions.add(questionCount);
+            const questionsContainer = document.getElementById('questions-container');
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'border border-gray-200 rounded-lg p-4 mb-4';
+            questionDiv.id = `question-${questionCount}`;
+            
+            questionDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h6 class="font-semibold">Question ${questionCount}</h6>
+                    <button onclick="removeQuestion(${questionCount})" class="text-red-600 hover:text-red-800 text-sm">✕ Remove</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Marks</label>
+                        <input type="number" id="marks-${questionCount}" placeholder="e.g., 5" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Question Type</label>
+                        <select id="type-${questionCount}" class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary">
+                            <option value="written">Written Answer</option>
+                            <option value="multiple">Multiple Choice</option>
+                            <option value="calculation">Calculation</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Question Text</label>
+                    <textarea id="text-${questionCount}" rows="3" placeholder="Enter the question..." class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Answer/Solution (Optional)</label>
+                    <textarea id="answer-${questionCount}" rows="2" placeholder="Enter the expected answer or solution..." class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary"></textarea>
+                </div>
+            `;
+            
+            questionsContainer.appendChild(questionDiv);
+        }
+
+        function removeQuestion(id) {
+            const questionDiv = document.getElementById(`question-${id}`);
+            if (questionDiv) {
+                questionDiv.remove();
+                activeQuestions.delete(id);
+            }
+        }
+
+        function previewPaper() {
+            console.log('Preview button clicked'); // Debug log
+            const paper = collectPaperData();
+            console.log('Collected paper data:', paper); // Debug log
+            
+            if (!paper.subject || !paper.title) {
+                alert('Please fill in the subject and paper title.');
+                return;
+            }
+
+            if (paper.questions.length === 0) {
+                alert('Please add at least one question.');
+                return;
+            }
+
+            const previewContent = generatePaperHTML(paper);
+            document.getElementById('preview-content').innerHTML = previewContent;
+            document.getElementById('paper-preview-modal').classList.remove('hidden');
+        }
+
+        function collectPaperData() {
+            console.log('Collecting paper data...'); // Debug log
+            const paper = {
+                subject: document.getElementById('paper-subject').value,
+                title: document.getElementById('paper-title').value,
+                duration: document.getElementById('paper-duration').value,
+                instructions: document.getElementById('paper-instructions').value,
+                questions: [],
+                createdDate: new Date().toLocaleDateString()
+            };
+
+            console.log('Basic paper info:', paper); // Debug log
+
+            // Collect all questions using activeQuestions set
+            activeQuestions.forEach(id => {
+                const marksEl = document.getElementById(`marks-${id}`);
+                const typeEl = document.getElementById(`type-${id}`);
+                const textEl = document.getElementById(`text-${id}`);
+                const answerEl = document.getElementById(`answer-${id}`);
+
+                if (marksEl && typeEl && textEl && answerEl) {
+                    const marks = marksEl.value;
+                    const type = typeEl.value;
+                    const text = textEl.value;
+                    const answer = answerEl.value;
+
+                    console.log(`Question ${id}:`, { marks, type, text, answer }); // Debug log
+
+                    if (text.trim()) {
+                        paper.questions.push({
+                            id: id,
+                            marks: parseInt(marks) || 0,
+                            type: type,
+                            text: text.trim(),
+                            answer: answer.trim()
+                        });
+                    }
+                } else {
+                    console.log(`Missing elements for question ${id}`); // Debug log
+                }
+            });
+
+            console.log('Final paper with questions:', paper); // Debug log
+            return paper;
+        }
+
+        function generatePaperHTML(paper) {
+                    const totalMarks = paper.questions.reduce((sum, q) => sum + q.marks, 0);
+
+                    let html = `
+                        <div class="text-center mb-8">
+                            <h1 class="text-2xl font-bold mb-2">${paper.subject.toUpperCase()}</h1>
+                            <h2 class="text-xl mb-2">${paper.title}</h2>
+                            <p class="mb-1"><strong>Time:</strong> ${paper.duration ? paper.duration + ' minutes' : 'Not specified'}</p>
+                            <p><strong>Total Marks:</strong> ${totalMarks}</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="font-bold mb-2">INSTRUCTIONS:</h3>
+                            <div class="whitespace-pre-line">${paper.instructions}</div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                    `;
+
+                    paper.questions.forEach((q, index) => {
+                        html += `
+                            <div class="border-l-4 border-primary pl-4">
+                                <div class="flex justify-between items-start">
+                                    <!-- Left side: number + question text -->
+                                    <div class="flex">
+                                        <span class="font-semibold mr-2">${index + 1}.</span>
+                                        <div class="whitespace-pre-line">${q.text}</div>
+                                    </div>
+                                    <!-- Right side: marks -->
+                                    <span class="text-sm bg-gray-100 px-2 py-1 rounded">[${q.marks} marks]</span>
+                                </div>
+                                ${q.answer ? `<div class="text-sm text-gray-600 italic mt-2">Expected answer: ${q.answer}</div>` : ''}
+                            </div>
+                        `;
+                    });
+
+                    html += '</div>';
+                    return html;
+                }
+
+
+        function savePaper() {
+            console.log('Save button clicked'); // Debug log
+            const paper = collectPaperData();
+            
+            if (!paper.subject || !paper.title || paper.questions.length === 0) {
+                alert('Please fill in all required fields and add at least one question.');
+                return;
+            }
+
+            paper.id = Date.now(); // Simple ID generation
+            createdPapers.push(paper);
+            
+            alert(`Paper "${paper.title}" saved successfully!`);
+            
+            // Clear form
+            document.getElementById('paper-subject').value = '';
+            document.getElementById('paper-title').value = '';
+            document.getElementById('paper-duration').value = '';
+            document.getElementById('paper-instructions').value = `Answer all questions in the spaces provided.
+                Show all working clearly.
+                Calculators are allowed.`;
+            document.getElementById('questions-container').innerHTML = '';
+            questionCount = 0;
+            activeQuestions.clear();
+        }
+
+        function generatePaperPDF() {
+            console.log('PDF button clicked'); // Debug log
+            const paper = collectPaperData();
+            
+            if (!paper.subject || !paper.title || paper.questions.length === 0) {
+                alert('Please fill in all required fields and add at least one question before generating PDF.');
+                return;
+            }
+
+            // Create a new window with the paper content
+            const paperHTML = generatePaperHTML(paper);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>${paper.subject} - ${paper.title}<\/title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                margin: 20px; 
+                                line-height: 1.6;
+                            }
+                            .text-center { text-align: center; }
+                            .font-bold { font-weight: bold; }
+                            .mb-1 { margin-bottom: 4px; }
+                            .mb-2 { margin-bottom: 8px; }
+                            .mb-4 { margin-bottom: 16px; }
+                            .mb-6 { margin-bottom: 24px; }
+                            .mb-8 { margin-bottom: 32px; }
+                            .space-y-6 > * + * { margin-top: 24px; }
+                            .border-l-4 { border-left: 4px solid #3b82f6; }
+                            .pl-4 { padding-left: 16px; }
+                            .whitespace-pre-line { white-space: pre-line; }
+                            .text-sm { font-size: 0.875rem; }
+                            .bg-gray-100 { background-color: #f3f4f6; }
+                            .px-2 { padding-left: 8px; padding-right: 8px; }
+                            .py-1 { padding-top: 4px; padding-bottom: 4px; }
+                            .rounded { border-radius: 4px; }
+                            .text-gray-600 { color: #4b5563; }
+                            .italic { font-style: italic; }
+                            .flex { display: flex; }
+                            .justify-between { justify-content: space-between; }
+                            .items-start { align-items: flex-start; }
+                            .items-center { align-items: center; }
+                        <\/style>
+                    <\/head>
+                    <body>
+                        ${paperHTML}
+                        <div style="margin-top: 40px; text-align: center; color: #666;">
+                            <p>Generated by EduTrack - ${new Date().toLocaleDateString()}<\/p>
+                        <\/div>
+                    <\/body>
+                <\/html>
+            `);
+            printWindow.document.close();
+            
+            // Add a small delay then trigger print dialog
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+            
+            alert('PDF preview opened in new window. Use your browser\'s print function to save as PDF.');
+        }
+
+        function updateBrowseTab() {
+            const papersList = document.getElementById('created-papers-list');
+            
+            if (createdPapers.length === 0) {
+                papersList.innerHTML = '<p class="text-gray-500 text-center py-8">No papers created yet. Use the "Create Paper" tab to add your first examination paper.</p>';
+                return;
+            }
+
+            let html = '';
+            createdPapers.forEach(paper => {
+                const totalMarks = paper.questions.reduce((sum, q) => sum + q.marks, 0);
+                html += `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div>
+                            <h5 class="font-semibold">${paper.subject} - ${paper.title}</h5>
+                            <p class="text-gray-600">${paper.questions.length} questions • ${totalMarks} total marks • Created: ${paper.createdDate}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="previewSavedPaper(${paper.id})" class="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">Preview</button>
+                            <button onclick="deletePaper(${paper.id})" class="px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            papersList.innerHTML = html;
+        }
+
+        function previewSavedPaper(id) {
+            const paper = createdPapers.find(p => p.id === id);
+            if (paper) {
+                const previewContent = generatePaperHTML(paper);
+                document.getElementById('preview-content').innerHTML = previewContent;
+                document.getElementById('paper-preview-modal').classList.remove('hidden');
+            }
+        }
+
+        function deletePaper(id) {
+            if (confirm('Are you sure you want to delete this paper?')) {
+                createdPapers = createdPapers.filter(p => p.id !== id);
+                updateBrowseTab();
+            }
+        }
+
+        function closePreview() {
+            document.getElementById('paper-preview-modal').classList.add('hidden');
+        }
+
+        function printPreview() {
+            const printContent = document.getElementById('preview-content').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Examination Paper<\/title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                            .text-center { text-align: center; }
+                            .font-bold { font-weight: bold; }
+                            .mb-2 { margin-bottom: 8px; }
+                            .mb-4 { margin-bottom: 16px; }
+                            .mb-6 { margin-bottom: 24px; }
+                            .mb-8 { margin-bottom: 32px; }
+                            .space-y-6 > * + * { margin-top: 24px; }
+                            .border-l-4 { border-left: 4px solid #3b82f6; }
+                            .pl-4 { padding-left: 16px; }
+                            .whitespace-pre-line { white-space: pre-line; }
+                            .text-sm { font-size: 0.875rem; }
+                            .bg-gray-100 { background-color: #f3f4f6; }
+                            .px-2 { padding-left: 8px; padding-right: 8px; }
+                            .py-1 { padding-top: 4px; padding-bottom: 4px; }
+                            .rounded { border-radius: 4px; }
+                            .text-gray-600 { color: #4b5563; }
+                            .italic { font-style: italic; }
+                            .flex { display: flex; }
+                            .justify-between { justify-content: space-between; }
+                            .items-start { align-items: flex-start; }
+                        <\/style>
+                    <\/head>
+                    <body>${printContent}<\/body>
+                <\/html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function addGrade() {
+            const subject = prompt('Enter subject name:');
+            const grade = prompt('Enter grade:');
+            if (subject && grade) {
+                alert(`Added ${grade}% for ${subject}`);
+                // In a real app, this would update the table
+            }
+        }
+
+        function showSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Auto-hide mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            
+            if (!mobileMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+    async function generatePaperPDF() {
+        const paper = collectPaperData();
+
+        if (!paper.subject || !paper.title) {
+            alert("Please fill in the subject and paper title.");
+            return;
+        }
+        if (paper.questions.length === 0) {
+            alert("Please add at least one question.");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        let y = 20;
+        doc.setFontSize(16);
+        doc.text(paper.subject.toUpperCase(), 105, y, { align: "center" });
+        y += 8;
+        doc.setFontSize(14);
+        doc.text(paper.title, 105, y, { align: "center" });
+        y += 8;
+        doc.setFontSize(12);
+        doc.text(`Time: ${paper.duration} minutes`, 105, y, { align: "center" });
+        y += 10;
+
+        // Instructions
+        doc.setFontSize(11);
+        doc.text("Instructions:", 10, y);
+        y += 6;
+        const splitInstructions = doc.splitTextToSize(paper.instructions, 180);
+        doc.text(splitInstructions, 10, y);
+        y += splitInstructions.length * 6 + 4;
+
+        // Questions
+        paper.questions.forEach((q, index) => {
+            const qText = `${index + 1}. ${q.text} (${q.marks} marks)`;
+            const splitQuestion = doc.splitTextToSize(qText, 180);
+            doc.text(splitQuestion, 10, y);
+            y += splitQuestion.length * 6 + 4;
+        });
+
+        doc.save(`${paper.subject} - ${paper.title}.pdf`);
+    }
+</script>
+
+</body>
+</html>

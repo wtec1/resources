@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attendance & Behaviour Tracker (Frontend Only)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Tailwind config (optional): set custom colors or fonts here
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: '#0ea5a4'
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto p-4 flex items-center justify-between">
+      <h1 class="text-xl font-bold text-gray-800">Attendance & Behaviour Tracker</h1>
+      <div class="text-sm text-gray-600">Frontend-only · Saves to <code>localStorage</code></div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 flex-1">
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- left: student management -->
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h2 class="font-semibold mb-3">Students</h2>
+        <form id="addStudentForm" class="flex gap-2">
+          <input id="studentName" required placeholder="Add student name" class="flex-1 p-2 border rounded" />
+          <button class="bg-brand text-white px-4 rounded" type="submit">Add</button>
+        </form>
+        <div class="mt-4">
+          <ul id="studentList" class="space-y-2 max-h-48 overflow-auto"></ul>
+        </div>
+        <div class="mt-4 border-t pt-3 flex gap-2">
+          <button id="clearStudents" class="text-sm text-red-600">Clear all</button>
+          <button id="exportStudents" class="ml-auto text-sm text-blue-600">Export CSV</button>
+        </div>
+      </div>
+
+      <!-- middle: attendance sheet -->
+      <div class="bg-white p-4 rounded-lg shadow col-span-1 lg:col-span-2">
+        <div class="flex items-center gap-4 mb-4">
+          <label class="text-sm">Date</label>
+          <input id="attDate" type="date" class="p-2 border rounded" />
+
+          <label class="text-sm">Class / Form</label>
+          <input id="className" placeholder="e.g. Form 2A" class="p-2 border rounded" />
+
+          <button id="loadDay" class="ml-auto bg-brand text-white px-4 py-2 rounded">Load Day</button>
+          <button id="saveDay" class="bg-indigo-600 text-white px-4 py-2 rounded">Save</button>
+        </div>
+
+        <div id="sheetArea" class="overflow-auto border rounded">
+          <table class="min-w-full divide-y">
+            <thead class="bg-gray-100 sticky top-0">
+              <tr>
+                <th class="p-2 text-left">#</th>
+                <th class="p-2 text-left">Student</th>
+                <th class="p-2 text-left">Attendance</th>
+                <th class="p-2 text-left">Behaviour (optional)</th>
+              </tr>
+            </thead>
+            <tbody id="attendanceTbody"></tbody>
+          </table>
+        </div>
+
+        <div class="mt-4 flex gap-2">
+          <button id="markAllPresent" class="bg-green-600 text-white px-3 py-1 rounded">Mark All Present</button>
+          <button id="markAllAbsent" class="bg-red-600 text-white px-3 py-1 rounded">Mark All Absent</button>
+          <button id="markAllLate" class="bg-yellow-500 text-black px-3 py-1 rounded">Mark All Late</button>
+
+          <div class="ml-auto flex items-center gap-2">
+            <label class="text-sm">Month Summary</label>
+            <input id="summaryMonth" type="month" class="p-2 border rounded" />
+            <button id="generateSummary" class="bg-indigo-600 text-white px-3 py-1 rounded">Generate</button>
+            <button id="exportPdf" class="bg-blue-600 text-white px-3 py-1 rounded">Export PDF</button>
+          </div>
+        </div>
+
+        <div id="summaryArea" class="mt-4"></div>
+      </div>
+    </section>
+
+    <section class="mt-6">
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h2 class="font-semibold mb-2">Usage & Notes</h2>
+        <ul class="list-disc pl-5 text-sm text-gray-700">
+          <li>Add students once — they are saved in your browser.</li>
+          <li>Select a date and click <strong>Load Day</strong> to edit attendance for that date.</li>
+          <li>Click <strong>Save</strong> to persist attendance to localStorage.</li>
+          <li>Use <strong>Month Summary</strong> to calculate attendance % and behaviour counts for a month.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t">
+    <div class="max-w-6xl mx-auto p-4 text-xs text-gray-500">Built with Tailwind + HTML + JS · Frontend-only</div>
+  </footer>
+
+<script>
+// --- Storage keys ---
+const STUDENTS_KEY = 'ab_students_v1';
+const ATT_KEY = 'ab_attendance_v1';
+
+// --- Utilities ---
+const $ = id => document.getElementById(id);
+
+function loadStudents(){
+  try{
+    return JSON.parse(localStorage.getItem(STUDENTS_KEY) || '[]');
+  }catch(e){return []}
+}
+function saveStudents(list){
+  localStorage.setItem(STUDENTS_KEY, JSON.stringify(list));
+}
+
+function loadAttendance(){
+  try{
+    return JSON.parse(localStorage.getItem(ATT_KEY) || '{}');
+  }catch(e){return {}}
+}
+function saveAttendance(obj){
+  localStorage.setItem(ATT_KEY, JSON.stringify(obj));
+}
+
+// --- UI renderers ---
+function renderStudentList(){
+  const ul = $('studentList');
+  ul.innerHTML = '';
+  const students = loadStudents();
+  students.forEach((s, i)=>{
+    const li = document.createElement('li');
+    li.className = 'flex items-center gap-2 justify-between';
+    li.innerHTML = `
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center text-sm">${i+1}</div>
+        <div>${escapeHtml(s)}</div>
+      </div>
+      <div class="flex gap-2">
+        <button data-index="${i}" class="removeStudent text-red-600 text-sm">Remove</button>
+      </div>
+    `;
+    ul.appendChild(li);
+  });
+}
+
+function renderAttendanceTable(dateStr){
+  const tbody = $('attendanceTbody');
+  tbody.innerHTML = '';
+  const students = loadStudents();
+  if(students.length===0){
+    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-gray-500">No students added. Add students to start tracking attendance.</td></tr>';
+    return;
+  }
+  const allAttendance = loadAttendance();
+  const dayData = allAttendance[dateStr] || {};
+
+  students.forEach((name, idx)=>{
+    const att = dayData[name] ? dayData[name].status : 'present';
+    const beh = dayData[name] ? dayData[name].behavior : '';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="p-2 align-top">${idx+1}</td>
+      <td class="p-2 align-top">${escapeHtml(name)}</td>
+      <td class="p-2 align-top">
+        <select class="attendanceSelect p-2 border rounded" data-name="${escapeAttr(name)}">
+          <option value="present" ${att==='present'?'selected':''}>Present</option>
+          <option value="absent" ${att==='absent'?'selected':''}>Absent</option>
+          <option value="late" ${att==='late'?'selected':''}>Late</option>
+        </select>
+      </td>
+      <td class="p-2 align-top">
+        <select class="behaviorSelect p-2 border rounded" data-name="${escapeAttr(name)}">
+          <option value="">-- none --</option>
+          <option value="positive" ${beh==='positive'?'selected':''}>Positive</option>
+          <option value="negative" ${beh==='negative'?'selected':''}>Negative</option>
+          <option value="note" ${beh==='note'?'selected':''}>Note</option>
+        </select>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// --- escape helpers ---
+function escapeHtml(s){
+  return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+function escapeAttr(s){
+  return s.replaceAll('"','\"');
+}
+
+// --- event handlers ---
+window.addEventListener('load', ()=>{
+  renderStudentList();
+  const today = new Date().toISOString().slice(0,10);
+  $('attDate').value = today;
+  renderAttendanceTable(today);
+});
+
+// Add student
+$('addStudentForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const name = $('studentName').value.trim();
+  if(!name) return;
+  const students = loadStudents();
+  students.push(name);
+  saveStudents(students);
+  $('studentName').value='';
+  renderStudentList();
+  renderAttendanceTable($('attDate').value);
+});
+
+// Remove student
+$('studentList').addEventListener('click', e=>{
+  if(e.target.classList.contains('removeStudent')){
+    const idx = Number(e.target.dataset.index);
+    const students = loadStudents();
+    students.splice(idx,1);
+    saveStudents(students);
+    renderStudentList();
+    renderAttendanceTable($('attDate').value);
+  }
+});
+
+// Clear all students
+$('clearStudents').addEventListener('click', ()=>{
+  if(!confirm('Clear all students? This cannot be undone.')) return;
+  saveStudents([]);
+  renderStudentList();
+  renderAttendanceTable($('attDate').value);
+});
+
+// Export students CSV
+$('exportStudents').addEventListener('click', ()=>{
+  const students = loadStudents();
+  if(students.length===0) return alert('No students to export');
+  const csv = 'Name\n' + students.map(s=>`"${s.replaceAll('"','""')}"`).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'students.csv'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+// Load day
+$('loadDay').addEventListener('click', ()=>{
+  const d = $('attDate').value;
+  if(!d) return alert('Pick a date');
+  renderAttendanceTable(d);
+});
+
+// Save day
+$('saveDay').addEventListener('click', ()=>{
+  const d = $('attDate').value;
+  if(!d) return alert('Pick a date');
+  const selects = document.querySelectorAll('.attendanceSelect');
+  const behaves = document.querySelectorAll('.behaviorSelect');
+  const students = loadStudents();
+  const allAttendance = loadAttendance();
+  allAttendance[d] = allAttendance[d] || {};
+  selects.forEach(s=>{
+    const name = s.dataset.name;
+    const status = s.value;
+    const behaviorEl = document.querySelector(`.behaviorSelect[data-name=\"${name}\"]`);
+    const behavior = behaviorEl ? behaviorEl.value : '';
+    allAttendance[d][name] = {status, behavior};
+  });
+  saveAttendance(allAttendance);
+  alert('Saved');
+});
+
+// Mark all
+$('markAllPresent').addEventListener('click', ()=>{setAllAttendance('present')});
+$('markAllAbsent').addEventListener('click', ()=>{setAllAttendance('absent')});
+$('markAllLate').addEventListener('click', ()=>{setAllAttendance('late')});
+function setAllAttendance(val){
+  document.querySelectorAll('.attendanceSelect').forEach(s=> s.value = val);
+}
+
+// Generate monthly summary
+$('generateSummary').addEventListener('click', ()=>{
+  const m = $('summaryMonth').value;
+  if(!m) return alert('Pick a month');
+  const [year, month] = m.split('-');
+  const students = loadStudents();
+  if(students.length===0) return alert('No students');
+  const allAttendance = loadAttendance();
+
+  // collect dates in month
+  const first = new Date(Number(year), Number(month)-1, 1);
+  const last = new Date(Number(year), Number(month), 0);
+  const dayCount = last.getDate();
+  const summary = {};
+  students.forEach(s=>summary[s] = {present:0, absent:0, late:0, positive:0, negative:0, note:0});
+
+  for(let d=1; d<=dayCount; d++){
+    const dt = new Date(Number(year), Number(month)-1, d);
+    const iso = dt.toISOString().slice(0,10);
+    const dayData = allAttendance[iso] || {};
+    students.forEach(s=>{
+      const rec = dayData[s];
+      if(rec){
+        summary[s][rec.status] = (summary[s][rec.status]||0) + 1;
+        if(rec.behavior) summary[s][rec.behavior] = (summary[s][rec.behavior]||0) + 1;
+      }else{
+        // no record = absent by default? we'll count as absent
+        summary[s]['absent'] = (summary[s]['absent']||0) + 1;
+      }
+    });
+  }
+
+  // build HTML
+  let html = `<div class=\"p-4 bg-white rounded shadow\">`;
+  html += `<h3 class=\"text-lg font-semibold mb-2\">Summary for ${m}</h3>`;
+  html += `<table class=\"w-full text-sm\"><thead><tr class=\"bg-gray-100\"><th class=\"p-2 text-left\">Student</th><th class=\"p-2\">Present</th><th class=\"p-2\">Absent</th><th class=\"p-2\">Late</th><th class=\"p-2\">+ve</th><th class=\"p-2\">-ve</th></tr></thead><tbody>`;
+  students.forEach(s=>{
+    const rec = summary[s];
+    const total = rec.present + rec.absent + rec.late;
+    const percent = total>0 ? Math.round((rec.present/total)*100) : 0;
+    html += `<tr class=\"border-t\"><td class=\"p-2\">${escapeHtml(s)}</td><td class=\"p-2 text-center\">${rec.present}</td><td class=\"p-2 text-center\">${rec.absent}</td><td class=\"p-2 text-center\">${rec.late}</td><td class=\"p-2 text-center\">${rec.positive}</td><td class=\"p-2 text-center\">${rec.negative}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  $('summaryArea').innerHTML = html;
+});
+
+// Export PDF
+$('exportPdf').addEventListener('click', ()=>{
+  const m = $('summaryMonth').value;
+  if(!m) return alert('Pick a month to export summary');
+  const element = document.createElement('div');
+  element.style.padding = '20px';
+  element.innerHTML = document.querySelector('#summaryArea').innerHTML || '<div>No summary generated</div>';
+  // add header info
+  const header = `<div style=\"text-align:center;margin-bottom:15px;\"><h2>Attendance Summary</h2><div>${m}</div><div>Class: ${escapeHtml($('className').value || '')}</div></div>`;
+  element.innerHTML = header + element.innerHTML;
+  // html2pdf options
+  const opt = {
+    margin: 10,
+    filename: `attendance_${m}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save();
+});
+
+</script>
+</body>
+</html>

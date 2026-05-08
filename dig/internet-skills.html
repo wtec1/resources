@@ -1,0 +1,520 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital & Internet Skills for Malawi Students</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .header-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .main-title {
+            font-size: clamp(2.5em, 5vw, 4em);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: clamp(1.2em, 2.5vw, 1.8em);
+            color: #ecf0f1;
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            padding: 30px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-icon {
+            font-size: 3em;
+            display: block;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: clamp(2em, 4vw, 2.8em);
+            color: #34495e;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-list {
+            list-style: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .section-list li {
+            font-size: clamp(1.1em, 2vw, 1.5em);
+            margin: 20px 0;
+            padding: 15px 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            color: #2c3e50;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .section-list li:hover {
+            transform: translateX(10px);
+            background: #d5dbdb;
+        }
+
+        .section-list li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .term-card {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.2);
+        }
+
+        .term-title {
+            font-weight: bold;
+            font-size: clamp(1.1em, 2vw, 1.3em);
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .term-desc {
+            color: #34495e;
+            font-size: clamp(1em, 1.8vw, 1.1em);
+        }
+
+        .safety-section {
+            background: linear-gradient(135deg, #ff7675 0%, #fd79a8 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+
+        .safety-section h2 {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .safety-section .section-list li {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .footer h2 {
+            color: white;
+            border-bottom-color: white;
+            font-size: clamp(2.5em, 4vw, 3.5em);
+        }
+
+        .footer .subtitle {
+            color: #dfe6e9;
+            margin-top: 20px;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                margin-bottom: 30px;
+                padding: 20px 0;
+            }
+
+            .section-list li {
+                padding: 12px 15px;
+                margin: 15px 0;
+            }
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .safety-section {
+                padding: 30px 20px;
+                margin: 30px 0;
+            }
+
+            .back-to-top {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 40px 20px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .section-list li {
+                font-size: 1.1em;
+                padding: 10px 12px;
+            }
+
+            .term-card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <span class="header-icon">🌐</span>
+            <h1 class="main-title">Digital & Internet Skills</h1>
+            <div class="subtitle">for Malawi Students</div>
+            <div class="subtitle">Learn how to use the Internet safely and effectively!</div>
+        </div>
+
+        <div class="content">
+            <!-- What is the Internet? -->
+            <div class="section">
+                <span class="section-icon">🌍</span>
+                <h2>What is the Internet?</h2>
+                <ul class="section-list">
+                    <li>A global network connecting millions of devices</li>
+                    <li>Lets people share information worldwide</li>
+                    <li>Enables learning and communication from anywhere</li>
+                    <li>Available 24/7 across the globe</li>
+                </ul>
+            </div>
+
+            <!-- How the Internet Helps Us -->
+            <div class="section">
+                <span class="section-icon">📚</span>
+                <h2>How the Internet Helps Us</h2>
+                <ul class="section-list">
+                    <li>Join online classes and virtual learning</li>
+                    <li>Access learning materials anytime, anywhere</li>
+                    <li>Talk to teachers and friends remotely</li>
+                    <li>Research topics for school projects</li>
+                    <li>Access educational videos and resources</li>
+                </ul>
+            </div>
+
+            <!-- Basic Internet Terms -->
+            <div class="section">
+                <span class="section-icon">📖</span>
+                <h2>Basic Internet Terms</h2>
+                <div class="terms-grid">
+                    <div class="term-card">
+                        <div class="term-title">🌐 Browser</div>
+                        <div class="term-desc">App to visit websites (e.g., Chrome, Firefox)</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">📍 URL</div>
+                        <div class="term-desc">Website address (e.g., www.google.com)</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">🔍 Search Engine</div>
+                        <div class="term-desc">Tool to find information (e.g., Google)</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">📄 Website</div>
+                        <div class="term-desc">Collection of web pages with information</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">📧 Email</div>
+                        <div class="term-desc">Send messages online electronically</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">⬇️ Download</div>
+                        <div class="term-desc">Save files from internet to your device</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">⬆️ Upload</div>
+                        <div class="term-desc">Send files from your device to internet</div>
+                    </div>
+                    <div class="term-card">
+                        <div class="term-title">☁️ Cloud Storage</div>
+                        <div class="term-desc">Save files online to access anywhere</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How to Access Internet -->
+            <div class="section">
+                <span class="section-icon">📱</span>
+                <h2>How to Access the Internet</h2>
+                <ul class="section-list">
+                    <li><strong>Devices:</strong> Smartphones, tablets, computers, laptops</li>
+                    <li><strong>Wi-Fi:</strong> Wireless internet connection</li>
+                    <li><strong>Mobile Data:</strong> Internet through phone networks</li>
+                    <li><strong>In Malawi:</strong> Airtel, TNM, and other providers</li>
+                    <li><strong>Public Access:</strong> Libraries, schools, internet cafes</li>
+                </ul>
+            </div>
+
+            <!-- Using Millennium E-Learning Centre -->
+            <div class="section">
+                <span class="section-icon">🎓</span>
+                <h2>Using Millennium E-Learning Centre</h2>
+                <ul class="section-list">
+                    <li><strong>Register:</strong> Sign up with your name and email</li>
+                    <li><strong>Login:</strong> Use your username and password</li>
+                    <li><strong>Navigate:</strong> Find courses and lessons easily</li>
+                    <li><strong>Profile:</strong> Keep your information updated</li>
+                    <li><strong>Progress:</strong> Track your learning journey</li>
+                </ul>
+            </div>
+
+            <!-- Finding Lessons & Resources -->
+            <div class="section">
+                <span class="section-icon">🔍</span>
+                <h2>Finding Lessons & Resources</h2>
+                <ul class="section-list">
+                    <li>Click on lesson titles or video thumbnails</li>
+                    <li>Download files for offline studying</li>
+                    <li>Take quizzes to test your knowledge</li>
+                    <li>Use search function to find specific topics</li>
+                    <li>Bookmark important resources for later</li>
+                </ul>
+            </div>
+
+            <!-- Stay Safe Online -->
+            <div class="safety-section">
+                <span class="section-icon">🛡️</span>
+                <h2>Stay Safe Online</h2>
+                <ul class="section-list">
+                    <li>Never share passwords or personal information</li>
+                    <li>Use strong passwords with letters, numbers, symbols</li>
+                    <li>Be careful of scams and fake news</li>
+                    <li>Don't click on suspicious links or downloads</li>
+                    <li>Tell a trusted adult if something feels wrong</li>
+                </ul>
+            </div>
+
+            <!-- Digital Citizenship -->
+            <div class="section">
+                <span class="section-icon">🤝</span>
+                <h2>Be a Good Digital Citizen</h2>
+                <ul class="section-list">
+                    <li>Be respectful and kind in all online interactions</li>
+                    <li>Don't spread false information or rumors</li>
+                    <li>Respect other people's privacy and property</li>
+                    <li>Help create a safe internet community</li>
+                    <li>Report inappropriate behavior to authorities</li>
+                </ul>
+            </div>
+
+            <!-- Using Search Engines -->
+            <div class="section">
+                <span class="section-icon">🔎</span>
+                <h2>How to Use Search Engines</h2>
+                <ul class="section-list">
+                    <li>Type keywords related to your question</li>
+                    <li>Use simple, clear words</li>
+                    <li>Try different word combinations</li>
+                    <li>Use quotation marks for exact phrases</li>
+                    <li>Add location words when searching for local info</li>
+                </ul>
+            </div>
+
+            <!-- Finding Trusted Information -->
+            <div class="section">
+                <span class="section-icon">✅</span>
+                <h2>Finding Trusted Information</h2>
+                <ul class="section-list">
+                    <li>Look for .gov, .edu, or well-known websites</li>
+                    <li>Check the date and author of information</li>
+                    <li>Compare information across multiple sources</li>
+                    <li>Be cautious of information that seems too good to be true</li>
+                    <li>Ask teachers or adults to help verify important information</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span class="section-icon">🎉</span>
+            <h2>Thank You!</h2>
+            <div class="subtitle">Keep practicing and exploring the Internet safely!</div>
+            <div class="subtitle">Remember: Learning never stops in the digital world</div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // Back to top functionality
+        window.addEventListener('scroll', function() {
+            const backToTopButton = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section, .safety-section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

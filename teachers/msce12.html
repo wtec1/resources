@@ -1,0 +1,348 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>School Report Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- html2pdf.js for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    /* Hide print buttons in print */
+    @media print {
+      #printBtn, #downloadBtn, #addSubjectBtn {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 p-6 min-h-screen">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">School Report Template</h1>
+
+    <form id="reportForm" class="space-y-6">
+      <!-- School Details -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">School Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" placeholder="School Name" class="border rounded px-3 py-2" name="schoolName" required />
+          <input type="text" placeholder="School Address" class="border rounded px-3 py-2" name="schoolAddress" />
+          <input type="text" placeholder="School Contact" class="border rounded px-3 py-2" name="schoolContact" />
+        </div>
+      </section>
+
+      <!-- Student Details -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Student Details</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" placeholder="Student Full Name" class="border rounded px-3 py-2" name="studentName" required />
+          <input type="text" placeholder="Student ID" class="border rounded px-3 py-2" name="studentId" />
+          <input type="text" placeholder="Class/Form" class="border rounded px-3 py-2" name="studentClass" />
+        </div>
+      </section>
+
+      <!-- Term and Position -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Term & Academic Position</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input type="text" placeholder="Term (e.g. Term 1, 2025)" class="border rounded px-3 py-2" name="term" required />
+          <input type="number" placeholder="Academic Position" class="border rounded px-3 py-2" name="academicPosition" min="1" />
+          <input type="text" placeholder="Class Size" class="border rounded px-3 py-2" name="classSize" />
+        </div>
+      </section>
+
+      <!-- Subjects -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Subjects, Scores, Grades & Remarks</h2>
+        <table class="w-full table-auto border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border border-gray-300 px-3 py-2 text-left">Subject</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Score</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Grade</th>
+              <th class="border border-gray-300 px-3 py-2 text-left">Remarks</th>
+            </tr>
+          </thead>
+          <tbody id="subjectsBody">
+            <!-- Rows inserted by JS -->
+          </tbody>
+        </table>
+        <div class="mt-2 text-right font-semibold text-gray-700">
+          Total Marks: <span id="totalMarks">0</span>
+        </div>
+
+        <!-- grade -->
+         <div class="mt-1 text-right font-semibold text-gray-700">
+        Total Grades: <span id="totalGrades">0</span>
+      </div>
+
+
+        <button type="button" id="addSubjectBtn" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Subject</button>
+      </section>
+
+      <!-- Teacher's Comments -->
+      <section>
+        <h2 class="text-xl font-semibold mb-2">Teacher's Comments</h2>
+        <textarea name="teacherComments" rows="4" placeholder="Enter comments here..." class="w-full border rounded px-3 py-2"></textarea>
+      </section>
+
+      <div class="flex justify-center space-x-4 mt-6">
+        <button type="button" id="printBtn" class="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 font-semibold">
+          Print Report
+        </button>
+        <button type="button" id="downloadBtn" class="bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700 font-semibold">
+          Download PDF
+        </button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  const subjectsBody = document.getElementById('subjectsBody');
+  const addSubjectBtn = document.getElementById('addSubjectBtn');
+  const printBtn = document.getElementById('printBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+  const reportForm = document.getElementById('reportForm');
+  const totalMarksSpan = document.getElementById('totalMarks');
+
+  // Add new subject row
+  function addSubjectRow(subject, score, grade, remarks) {
+    subject = subject || '';
+     score = score || '';
+    grade = grade || '';
+    remarks = remarks || '';
+    
+    const row = document.createElement('tr');
+    row.innerHTML = '<td class="border border-gray-300 px-3 py-2">' +
+      '<input type="text" name="subject[]" value="' + subject + '" placeholder="Subject name" class="w-full border rounded px-2 py-1" required />' +
+      '</td>' +
+
+           '<td class="border border-gray-300 px-3 py-2">' +
+      '<input type="number" name="score[]" value="' + score + '" placeholder="Score (e.g. 75)" class="w-full border rounded px-2 py-1" min="0" max="100" required />' +
+      '</td>' +
+   
+      '<td class="border border-gray-300 px-3 py-2">' +
+      '<input type="number" name="grade[]" value="' + grade + '" placeholder="Grade (e.g. 5)" class="w-full border rounded px-2 py-1" min="0" max="100" required />' +
+      '</td>' +
+     
+      '<td class="border border-gray-300 px-3 py-2">' +
+      '<input type="text" name="remarks[]" value="' + remarks + '" placeholder="Remarks" class="w-full border rounded px-2 py-1" />' +
+      '</td>';
+    
+    subjectsBody.appendChild(row);
+
+    // Add listener for dynamic total calculation on score input
+   const scoreInput = row.querySelector('input[name="score[]"]');
+    const gradeInput = row.querySelector('input[name="grade[]"]');
+
+    scoreInput.addEventListener('input', calculateTotalMarks);
+    gradeInput.addEventListener('input', calculateGradeTotal);
+
+    calculateTotalMarks();
+    calculateGradeTotal();
+  }
+
+  // Calculate total marks
+  function calculateTotalMarks() {
+    const scoreInputs = document.querySelectorAll('input[name="score[]"]');
+    let total = 0;
+
+    scoreInputs.forEach(function(input) {
+      const num = parseFloat(input.value);
+      if (!isNaN(num)) total += num;
+    });
+
+    totalMarksSpan.textContent = total.toFixed(2);
+  }
+
+  // Calculate total grades
+  function calculateGradeTotal() {
+    const gradeInputs = document.querySelectorAll('input[name="grade[]"]');
+    let total = 0;
+
+    gradeInputs.forEach(function(input) {
+      const num = parseFloat(input.value);
+      if (!isNaN(num)) total += num;
+    });
+
+  document.getElementById('totalGrades').textContent = total.toFixed(2);
+}
+
+
+  // Initial subject row
+  addSubjectRow();
+
+  // Add subject row on button click
+  addSubjectBtn.addEventListener('click', function() {
+    addSubjectRow();
+  });
+
+  // Helper to get input values
+  function getInputValue(name, index) {
+    index = index || 0;
+    const inputs = reportForm.querySelectorAll('[name="' + name + '"]');
+    return inputs[index] ? inputs[index].value.trim() : '';
+  }
+
+  // Create printable HTML string
+  function createPrintableHTML() {
+    const subjects = Array.from(reportForm.querySelectorAll('input[name="subject[]"]'));
+       const scores = Array.from(reportForm.querySelectorAll('input[name="score[]"]'));
+    const grades = Array.from(reportForm.querySelectorAll('input[name="grade[]"]'));
+    const remarks = Array.from(reportForm.querySelectorAll('input[name="remarks[]"]'));
+
+    let subjectsHTML = '';
+    subjects.forEach(function(subInput, i) {
+      const subject = subInput.value.trim();
+      const score = scores[i].value.trim();
+      const grade = grades[i].value.trim();
+      const remark = remarks[i].value.trim();
+      subjectsHTML += '<tr>' +
+        '<td style="border:1px solid #ccc; padding: 8px;">' + subject + '</td>' +
+          '<td style="border:1px solid #ccc; padding: 8px;">' + score + '</td>' +
+        '<td style="border:1px solid #ccc; padding: 8px;">' + grade + '</td>' +
+        '<td style="border:1px solid #ccc; padding: 8px;">' + remark + '</td>' +
+        '</tr>';
+    });
+
+    const totalMarks = totalMarksSpan.textContent;
+
+    return '<div style="font-family: Arial, sans-serif; max-width: 100%; margin: 0; padding: 20px; background: white; color: black; line-height: 1.4;">' +
+      '<h1 style="text-align: center; font-size: 24px; margin-bottom: 30px; font-weight: bold;">School Report</h1>' +
+      
+      '<div style="margin-bottom: 20px;">' +
+        '<h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333;">School Details</h2>' +
+        '<p style="margin: 5px 0;"><strong>School Name:</strong> ' + getInputValue('schoolName') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>School Address:</strong> ' + getInputValue('schoolAddress') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>School Contact:</strong> ' + getInputValue('schoolContact') + '</p>' +
+      '</div>' +
+      
+      '<div style="margin-bottom: 20px;">' +
+        '<h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333;">Student Details</h2>' +
+        '<p style="margin: 5px 0;"><strong>Name:</strong> ' + getInputValue('studentName') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>ID:</strong> ' + getInputValue('studentId') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>Class/Form:</strong> ' + getInputValue('studentClass') + '</p>' +
+      '</div>' +
+      
+      '<div style="margin-bottom: 20px;">' +
+        '<h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333;">Term & Academic Position</h2>' +
+        '<p style="margin: 5px 0;"><strong>Term:</strong> ' + getInputValue('term') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>Academic Position:</strong> ' + getInputValue('academicPosition') + '</p>' +
+        '<p style="margin: 5px 0;"><strong>Class Size:</strong> ' + getInputValue('classSize') + '</p>' +
+      '</div>' +
+      
+      '<div style="margin-bottom: 20px;">' +
+        '<h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333;">Subjects, Grades & Remarks</h2>' +
+        '<table style="width: 100%; border-collapse: collapse; margin-top: 10px;">' +
+          '<thead>' +
+            '<tr style="background-color: #f0f0f0;">' +
+              '<th style="border: 1px solid #ccc; padding: 8px; text-align: left; font-weight: bold;">Subject</th>' +
+               '<th style="border: 1px solid #ccc; padding: 8px; text-align: left; font-weight: bold;">Score</th>' +
+              '<th style="border: 1px solid #ccc; padding: 8px; text-align: left; font-weight: bold;">Grade</th>' +
+              '<th style="border: 1px solid #ccc; padding: 8px; text-align: left; font-weight: bold;">Remarks</th>' +
+            '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+            subjectsHTML +
+          '</tbody>' +
+          '<tfoot>' +
+            '<tr style="background-color: #f0f0f0; font-weight: bold;">' +
+              '<td style="border: 1px solid #ccc; padding: 8px; text-align: left;">Total Marks</td>' +
+              '<td style="border: 1px solid #ccc; padding: 8px; text-align: left;" colspan="2">' + totalMarks + '</td>' +
+            '</tr>' +
+          '</tfoot>' +
+        '</table>' +
+      '</div>' +
+      
+      '<div style="margin-bottom: 20px;">' +
+        '<h2 style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 2px solid #333;">Teacher\'s Comments</h2>' +
+        '<p style="margin: 10px 0; line-height: 1.6;">' + getInputValue('teacherComments').replace(/\n/g, '<br>') + '</p>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // Print handler
+  printBtn.addEventListener('click', function() {
+    if (!reportForm.reportValidity()) {
+      alert('Please fill out all required fields before printing.');
+      return;
+    }
+    var printWindow = window.open('', '', 'width=900,height=700');
+    printWindow.document.write('<html><head><title>Print Report</title>');
+    printWindow.document.write('<style>body { font-family: sans-serif; margin: 2rem; } table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 8px; text-align: left; } th { background-color: #e2e8f0; }</style>');
+    printWindow.document.write('</head><body>');
+    printWindow.document.write(createPrintableHTML());
+    printWindow.document.write('<\/body><\/html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  });
+
+  // Download PDF handler
+downloadBtn.addEventListener('click', function() {
+  if (!reportForm.reportValidity()) {
+    alert('Please fill out all required fields before downloading.');
+    return;
+  }
+  
+  var printableContent = document.createElement('div');
+  printableContent.innerHTML = createPrintableHTML();
+  
+  // Apply PDF-like styling with explicit positioning
+  printableContent.style.width = '794px';
+  printableContent.style.padding = '0'; // Remove padding initially
+  printableContent.style.margin = '0'; // Ensure no margin
+  printableContent.style.fontFamily = 'Arial, sans-serif';
+  printableContent.style.fontSize = '14px';
+  printableContent.style.lineHeight = '1.6';
+  printableContent.style.backgroundColor = 'white';
+  printableContent.style.color = 'black';
+  printableContent.style.boxSizing = 'border-box';
+  printableContent.style.position = 'relative';
+  printableContent.style.top = '0';
+  
+  var options = {
+    margin: [0.4, 0.4, 0.4, 0.4], // Top, Right, Bottom, Left margins
+    filename: 'school-report.pdf',
+    image: { type: 'jpeg', quality: 0.95 },
+    html2canvas: { 
+      scale: 1.5,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      y: 0, // Start from top
+      scrollY: 0 // Reset scroll position
+    },
+    jsPDF: { 
+      unit: 'in', // Changed to inches for better margin control
+      format: 'a4', 
+      orientation: 'portrait' 
+    }
+  };
+  
+  html2pdf()
+    .set(options)
+    .from(printableContent)
+    .save()
+    .catch(function(error) {
+      console.error('PDF generation failed:', error);
+      alert('Failed to generate PDF. Please try again.');
+    });
+});
+
+</script>
+
+</body>
+</html>

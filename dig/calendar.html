@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Local School Event Calendar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+<header class="bg-white shadow-sm p-4 flex justify-between items-center">
+  <h1 class="text-xl font-bold">School Event Calendar</h1>
+  <div class="text-sm text-gray-600">Frontend-only · Offline</div>
+</header>
+
+<main class="max-w-6xl mx-auto p-6 flex-1">
+
+  <!-- Event Form -->
+  <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <h2 class="font-semibold mb-2">Add New Event</h2>
+    <form id="eventForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <input id="eventTitle" type="text" placeholder="Event Title" class="p-2 border rounded" required>
+      <input id="eventDate" type="date" class="p-2 border rounded" required>
+      <select id="eventType" class="p-2 border rounded">
+       <option value="Exam">Exam</option>
+        <option value="Sports">Sports Day</option>
+        <option value="Holiday">Holiday</option>
+        <option value="Other">Other</option>
+        <option value="ParentMeeting">Parent-Teacher Meeting</option>
+        <option value="ClubActivity">Club Activity</option>
+        <option value="FieldTrip">Field Trip / Excursion</option>
+        <option value="Assembly">School Assembly</option>
+        <option value="Workshop">Workshop / Seminar</option>
+        <option value="Competition">Competition / Quiz</option>
+        <option value="CulturalEvent">Cultural Event / Drama</option>
+        <option value="Graduation">Graduation / Awards</option>
+        <option value="ExamResult">Exam Results Day</option>
+        <option value="TeacherTraining">Teacher Training / Meeting</option>
+        <option value="SpecialEvent">Special Event / Celebration</option>
+
+      </select>
+      <button class="bg-brand text-blue-600 px-4 py-2 rounded col-span-1 md:col-span-3" type="submit">Add Event</button>
+    </form>
+  </div>
+
+  <!-- Filter Month -->
+  <div class="mb-4 flex gap-2 items-center">
+    <label>Filter by month:</label>
+    <input type="month" id="filterMonth" class="p-2 border rounded">
+    <button id="clearFilter" class="text-sm text-red-600">Clear</button>
+    <button id="exportPdf" class="ml-auto bg-blue-600 text-white px-3 py-1 rounded">Export PDF</button>
+  </div>
+
+  <!-- Event Calendar Table -->
+  <div id="calendarArea" class="overflow-auto bg-white p-4 rounded-lg shadow">
+    <table class="min-w-full divide-y text-sm" id="calendarTable">
+      <thead class="bg-gray-100 sticky top-0">
+        <tr>
+          <th class="p-2 text-left">Date</th>
+          <th class="p-2 text-left">Title</th>
+          <th class="p-2 text-left">Type</th>
+          <th class="p-2 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="bg-white border-t p-4 text-xs text-gray-500 text-center">Built with Tailwind + HTML + JS · Offline</footer>
+
+<script>
+const EVENTS_KEY = 'school_events_v1';
+
+// Utils
+const $ = id => document.getElementById(id);
+function loadEvents(){
+  try { return JSON.parse(localStorage.getItem(EVENTS_KEY) || '[]'); } catch(e){ return [] }
+}
+function saveEvents(list){ localStorage.setItem(EVENTS_KEY, JSON.stringify(list)); }
+
+function renderEvents(filterMonth){
+  const tbody = document.querySelector('#calendarTable tbody');
+  tbody.innerHTML = '';
+  let events = loadEvents();
+  if(filterMonth){
+    events = events.filter(e=> e.date.startsWith(filterMonth));
+  }
+  events.sort((a,b)=> a.date.localeCompare(b.date));
+  if(events.length===0){
+    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-gray-500">No events found.</td></tr>';
+    return;
+  }
+  events.forEach((e,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="p-2">${e.date}</td>
+      <td class="p-2">${e.title}</td>
+      <td class="p-2">${e.type}</td>
+      <td class="p-2"><button data-index="${i}" class="deleteEvent text-red-600 text-sm">Delete</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Add Event
+$('eventForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  const title = $('eventTitle').value.trim();
+  const date = $('eventDate').value;
+  const type = $('eventType').value;
+  if(!title || !date) return;
+  const events = loadEvents();
+  events.push({title,date,type});
+  saveEvents(events);
+  $('eventForm').reset();
+  renderEvents($('filterMonth').value);
+});
+
+// Delete Event
+document.querySelector('#calendarTable tbody').addEventListener('click', e=>{
+  if(e.target.classList.contains('deleteEvent')){
+    const idx = Number(e.target.dataset.index);
+    const events = loadEvents();
+    events.splice(idx,1);
+    saveEvents(events);
+    renderEvents($('filterMonth').value);
+  }
+});
+
+// Filter month
+$('filterMonth').addEventListener('change', ()=>{
+  renderEvents($('filterMonth').value);
+});
+$('clearFilter').addEventListener('click', ()=>{
+  $('filterMonth').value='';
+  renderEvents();
+});
+
+// Export PDF
+$('exportPdf').addEventListener('click', ()=>{
+  const element = document.createElement('div');
+  element.innerHTML = document.querySelector('#calendarArea').innerHTML;
+  html2pdf().set({ margin: 10, filename: 'school_calendar.pdf', image: {type:'jpeg', quality:0.98}, html2canvas:{scale:2}, jsPDF:{unit:'mm', format:'a4', orientation:'portrait'} }).from(element).save();
+});
+
+// Initial render
+renderEvents();
+</script>
+</body>
+</html>

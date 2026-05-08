@@ -1,0 +1,942 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocational & Technical Education Tools - Malawi Secondary Schools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tab-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .tab-button.active {
+            color: #667eea;
+            background: white;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+        
+        .checkbox-item input {
+            margin-right: 10px;
+            width: auto;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .results {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .results h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .career-match, .financial-summary, .skill-progress {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transition: width 0.5s ease;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .malawi-context {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .malawi-context h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        .icon {
+            font-size: 1.2em;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Vocational & Technical Education Tools</h1>
+            <p>Career Assessment • Business Planning • Skills Development for Malawi Secondary Schools</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('career-assessment')">
+                🎯 Career Assessment
+            </button>
+            <button class="tab-button" onclick="showTab('business-planner')">
+                💰 Business Planner
+            </button>
+            <button class="tab-button" onclick="showTab('skills-tracker')">
+                📊 Skills Tracker
+            </button>
+        </div>
+        
+        <!-- Career Assessment Tab -->
+        <div id="career-assessment" class="tab-content active">
+            <div class="malawi-context">
+                <h4>🇲🇼 Malawi Job Market Context</h4>
+                <p>This assessment considers opportunities in agriculture, tourism, manufacturing, education, healthcare, and emerging sectors in Malawi's economy.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="student-name">Student Name:</label>
+                <input type="text" id="student-name" placeholder="Enter student's full name">
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <div class="form-group">
+                        <label for="academic-strength">Primary Academic Strength:</label>
+                        <select id="academic-strength">
+                            <option value="">Select primary strength</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="sciences">Physical Sciences</option>
+                            <option value="biology">Biological Sciences</option>
+                            <option value="languages">Languages & Communication</option>
+                            <option value="social-studies">Social Studies</option>
+                            <option value="creative-arts">Creative Arts</option>
+                            <option value="practical-skills">Practical/Technical Skills</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="interest-level">Interest Level:</label>
+                        <select id="interest-level">
+                            <option value="">Select interest level</option>
+                            <option value="high">High - Very passionate</option>
+                            <option value="moderate">Moderate - Some interest</option>
+                            <option value="developing">Developing - Growing interest</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Personal Interests & Skills (Select all that apply):</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="farming" value="farming">
+                        <label for="farming">🌱 Agriculture & Farming</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="technology" value="technology">
+                        <label for="technology">💻 Technology & Computing</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="healthcare" value="healthcare">
+                        <label for="healthcare">🏥 Healthcare & Medicine</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="teaching" value="teaching">
+                        <label for="teaching">👨‍🏫 Teaching & Education</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="business" value="business">
+                        <label for="business">💼 Business & Trade</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="construction" value="construction">
+                        <label for="construction">🏗️ Construction & Engineering</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="tourism" value="tourism">
+                        <label for="tourism">🗺️ Tourism & Hospitality</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="creative" value="creative">
+                        <label for="creative">🎨 Creative Arts & Design</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="assessCareer()">🎯 Get Career Recommendations</button>
+            
+            <div id="career-results" class="results" style="display: none;">
+                <h3>🎯 Your Career Assessment Results</h3>
+                <div id="career-matches"></div>
+            </div>
+        </div>
+        
+        <!-- Business Planner Tab -->
+        <div id="business-planner" class="tab-content">
+            <div class="malawi-context">
+                <h4>🇲🇼 Malawi Business Environment</h4>
+                <p>Planning for local market opportunities, considering Malawian currency (MWK), local regulations, and available resources.</p>
+            </div>
+            
+            <div class="two-column">
+                <div>
+                    <div class="form-group">
+                        <label for="business-idea">Business Idea:</label>
+                        <input type="text" id="business-idea" placeholder="e.g., Mobile phone repair service">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startup-capital">Startup Capital (MWK):</label>
+                        <input type="number" id="startup-capital" placeholder="e.g., 50000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="monthly-expenses">Monthly Expenses (MWK):</label>
+                        <input type="number" id="monthly-expenses" placeholder="e.g., 15000">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label for="target-market">Target Market:</label>
+                        <select id="target-market">
+                            <option value="">Select target market</option>
+                            <option value="local-community">Local Community</option>
+                            <option value="students-schools">Students & Schools</option>
+                            <option value="farmers">Farmers</option>
+                            <option value="urban-professionals">Urban Professionals</option>
+                            <option value="tourists">Tourists</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expected-revenue">Expected Monthly Revenue (MWK):</label>
+                        <input type="number" id="expected-revenue" placeholder="e.g., 75000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="business-location">Business Location:</label>
+                        <select id="business-location">
+                            <option value="">Select location</option>
+                            <option value="lilongwe">Lilongwe</option>
+                            <option value="blantyre">Blantyre</option>
+                            <option value="mzuzu">Mzuzu</option>
+                            <option value="zomba">Zomba</option>
+                            <option value="rural">Rural Area</option>
+                            <option value="border-town">Border Town</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="business-description">Business Description:</label>
+                <textarea id="business-description" rows="4" placeholder="Describe your business idea, what products/services you'll offer, and how it will serve the local community..."></textarea>
+            </div>
+            
+            <button class="btn" onclick="calculateBusiness()">💰 Generate Business Plan</button>
+            
+            <div id="business-results" class="results" style="display: none;">
+                <h3>💰 Your Business Plan Summary</h3>
+                <div id="business-analysis"></div>
+            </div>
+        </div>
+        
+        <!-- Skills Tracker Tab -->
+        <div id="skills-tracker" class="tab-content">
+            <div class="malawi-context">
+                <h4>🇲🇼 Essential Skills for Malawi's Job Market</h4>
+                <p>Track your progress in key competencies valued by employers and essential for success in Malawi's economy.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="tracker-student-name">Student Name:</label>
+                <input type="text" id="tracker-student-name" placeholder="Enter student's full name">
+            </div>
+            
+            <div class="form-group">
+                <label for="skills-category">Skills Category:</label>
+                <select id="skills-category" onchange="loadSkills()">
+                    <option value="">Select skills category</option>
+                    <option value="technical">Technical Skills</option>
+                    <option value="digital">Digital Literacy</option>
+                    <option value="communication">Communication Skills</option>
+                    <option value="entrepreneurial">Entrepreneurial Skills</option>
+                    <option value="agricultural">Agricultural Skills</option>
+                    <option value="life-skills">Life Skills</option>
+                </select>
+            </div>
+            
+            <div id="skills-checklist" style="display: none;">
+                <h4>Rate your current skill level (1-5 scale):</h4>
+                <div id="skills-items"></div>
+                
+                <button class="btn" onclick="updateSkills()" style="margin-top: 20px;">📊 Update Skills Assessment</button>
+            </div>
+            
+            <div id="skills-results" class="results" style="display: none;">
+                <h3>📊 Skills Progress Report</h3>
+                <div id="skills-summary"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const careerDatabase = {
+            'mathematics': {
+                'farming': ['Agricultural Economist', 'Farm Management Consultant', 'Agricultural Data Analyst'],
+                'technology': ['Software Developer', 'Data Analyst', 'IT Support Specialist'],
+                'business': ['Financial Analyst', 'Accountant', 'Banking Officer'],
+                'construction': ['Civil Engineer', 'Quantity Surveyor', 'Project Manager'],
+                'healthcare': ['Medical Laboratory Technician', 'Biomedical Engineer', 'Health Data Analyst']
+            },
+            'sciences': {
+                'healthcare': ['Clinical Officer', 'Medical Assistant', 'Laboratory Technician'],
+                'farming': ['Agricultural Extension Worker', 'Soil Scientist', 'Crop Protection Specialist'],
+                'construction': ['Civil Engineer', 'Water Engineer', 'Environmental Scientist'],
+                'technology': ['Telecommunications Engineer', 'Electronics Technician', 'Quality Control Specialist']
+            },
+            'biology': {
+                'healthcare': ['Nurse', 'Community Health Worker', 'Medical Assistant'],
+                'farming': ['Agricultural Officer', 'Veterinary Assistant', 'Food Safety Inspector'],
+                'tourism': ['Eco-tourism Guide', 'Park Ranger', 'Wildlife Conservation Officer']
+            },
+            'languages': {
+                'teaching': ['Primary School Teacher', 'Secondary School Teacher', 'Adult Literacy Coordinator'],
+                'tourism': ['Tour Guide', 'Hotel Manager', 'Cultural Interpreter'],
+                'business': ['Marketing Officer', 'Customer Service Manager', 'Communications Specialist']
+            },
+            'social-studies': {
+                'teaching': ['Social Studies Teacher', 'Civic Education Officer', 'Community Development Worker'],
+                'business': ['Human Resources Officer', 'Project Coordinator', 'NGO Program Manager'],
+                'tourism': ['Cultural Heritage Officer', 'Tourism Development Officer', 'Museum Curator']
+            },
+            'creative-arts': {
+                'creative': ['Graphic Designer', 'Traditional Craft Maker', 'Photography Services'],
+                'tourism': ['Cultural Performer', 'Arts & Crafts Entrepreneur', 'Event Organizer'],
+                'teaching': ['Arts Teacher', 'Cultural Education Coordinator', 'Workshop Facilitator']
+            },
+            'practical-skills': {
+                'construction': ['Building Contractor', 'Plumber', 'Electrician'],
+                'technology': ['Computer Repair Technician', 'Mobile Phone Repair', 'Electronics Repair'],
+                'business': ['Tailoring & Fashion', 'Carpentry & Furniture', 'Auto Mechanic']
+            }
+        };
+        
+        const skillsDatabase = {
+            'technical': [
+                'Computer Operation', 'Mobile Phone Repair', 'Electronics Basics', 'Mechanical Repair',
+                'Construction Skills', 'Electrical Installation', 'Plumbing', 'Welding'
+            ],
+            'digital': [
+                'Basic Computer Skills', 'Internet Usage', 'Microsoft Office', 'Email Communication',
+                'Social Media Management', 'Online Banking', 'Digital Payment Systems', 'E-commerce'
+            ],
+            'communication': [
+                'English Communication', 'Chichewa Proficiency', 'Public Speaking', 'Written Communication',
+                'Customer Service', 'Negotiation Skills', 'Presentation Skills', 'Active Listening'
+            ],
+            'entrepreneurial': [
+                'Business Planning', 'Financial Management', 'Marketing & Sales', 'Customer Relations',
+                'Record Keeping', 'Product Development', 'Risk Management', 'Leadership'
+            ],
+            'agricultural': [
+                'Crop Production', 'Livestock Management', 'Soil Management', 'Pest Control',
+                'Post-Harvest Handling', 'Irrigation Techniques', 'Organic Farming', 'Farm Business Management'
+            ],
+            'life-skills': [
+                'Time Management', 'Problem Solving', 'Critical Thinking', 'Teamwork',
+                'Adaptability', 'Self-Motivation', 'Stress Management', 'Goal Setting'
+            ]
+        };
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected tab and activate button
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function assessCareer() {
+            const studentName = document.getElementById('student-name').value;
+            const academicStrength = document.getElementById('academic-strength').value;
+            const interestLevel = document.getElementById('interest-level').value;
+            
+            if (!studentName || !academicStrength || !interestLevel) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const interests = [];
+            document.querySelectorAll('#career-assessment input[type="checkbox"]:checked').forEach(checkbox => {
+                interests.push(checkbox.value);
+            });
+            
+            if (interests.length === 0) {
+                alert('Please select at least one interest area');
+                return;
+            }
+            
+            const matches = [];
+            interests.forEach(interest => {
+                if (careerDatabase[academicStrength] && careerDatabase[academicStrength][interest]) {
+                    careerDatabase[academicStrength][interest].forEach(career => {
+                        matches.push({
+                            career: career,
+                            interest: interest,
+                            match: calculateMatch(interest, interestLevel)
+                        });
+                    });
+                }
+            });
+            
+            displayCareerResults(studentName, matches);
+        }
+        
+        function calculateMatch(interest, level) {
+            const baseScore = Math.random() * 30 + 70; // 70-100 range
+            const levelMultiplier = level === 'high' ? 1.0 : level === 'moderate' ? 0.9 : 0.8;
+            return Math.round(baseScore * levelMultiplier);
+        }
+        
+        function displayCareerResults(studentName, matches) {
+            matches.sort((a, b) => b.match - a.match);
+            
+            let html = `<h4>Career Recommendations for ${studentName}</h4>`;
+            
+            matches.slice(0, 5).forEach((match, index) => {
+                html += `
+                    <div class="career-match">
+                        <h5>${index + 1}. ${match.career}</h5>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${match.match}%"></div>
+                        </div>
+                        <p><strong>${match.match}% Match</strong> - Based on ${match.interest} interest</p>
+                        <p><em>💡 Next Steps: Research this career further, speak with professionals in this field, or look for relevant courses and training opportunities in Malawi.</em></p>
+                    </div>
+                `;
+            });
+            
+            html += `
+                <div style="margin-top: 20px; padding: 15px; background: #e7f3ff; border-radius: 10px;">
+                    <h5>🎓 Educational Pathways in Malawi:</h5>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Universities: UNIMA, MUBAS, MU, LUANAR</li>
+                        <li>Technical Colleges: Malawi Institute of Technology, Don Bosco Technical College</li>
+                        <li>Teacher Training Colleges: Domasi, Karonga, Lilongwe</li>
+                        <li>Agricultural Colleges: Bunda, Natural Resources College</li>
+                    </ul>
+                </div>
+            `;
+            
+            document.getElementById('career-matches').innerHTML = html;
+            document.getElementById('career-results').style.display = 'block';
+        }
+
+        function calculateBusiness() {
+            const businessIdea = document.getElementById('business-idea').value;
+            const startupCapital = parseFloat(document.getElementById('startup-capital').value) || 0;
+            const monthlyExpenses = parseFloat(document.getElementById('monthly-expenses').value) || 0;
+            const expectedRevenue = parseFloat(document.getElementById('expected-revenue').value) || 0;
+            const targetMarket = document.getElementById('target-market').value;
+            const location = document.getElementById('business-location').value;
+            
+            if (!businessIdea || !startupCapital || !monthlyExpenses || !expectedRevenue) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            const monthlyProfit = expectedRevenue - monthlyExpenses;
+            const breakEvenMonths = startupCapital / (monthlyProfit > 0 ? monthlyProfit : 1);
+            const yearlyProfit = monthlyProfit * 12;
+            const roi = (yearlyProfit / startupCapital) * 100;
+            
+            let viability = 'High';
+            if (roi < 20) viability = 'Low';
+            else if (roi < 50) viability = 'Moderate';
+            
+            displayBusinessResults(businessIdea, {
+                startupCapital,
+                monthlyExpenses,
+                expectedRevenue,
+                monthlyProfit,
+                breakEvenMonths,
+                yearlyProfit,
+                roi,
+                viability,
+                targetMarket,
+                location
+            });
+        }
+        
+        function displayBusinessResults(businessIdea, data) {
+            const html = `
+                <div class="financial-summary">
+                    <h4>💼 ${businessIdea} - Business Analysis</h4>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h5>💰 Financial Summary</h5>
+                            <p><strong>Startup Capital:</strong> MWK ${data.startupCapital.toLocaleString()}</p>
+                            <p><strong>Monthly Revenue:</strong> MWK ${data.expectedRevenue.toLocaleString()}</p>
+                            <p><strong>Monthly Expenses:</strong> MWK ${data.monthlyExpenses.toLocaleString()}</p>
+                            <p><strong>Monthly Profit:</strong> MWK ${data.monthlyProfit.toLocaleString()}</p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h5>📊 Business Metrics</h5>
+                            <p><strong>Break-even Period:</strong> ${Math.ceil(data.breakEvenMonths)} months</p>
+                            <p><strong>Annual Profit:</strong> MWK ${data.yearlyProfit.toLocaleString()}</p>
+                            <p><strong>ROI:</strong> ${data.roi.toFixed(1)}%</p>
+                            <p><strong>Viability:</strong> <span style="color: ${data.viability === 'High' ? 'green' : data.viability === 'Moderate' ? 'orange' : 'red'}">${data.viability}</span></p>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <h5>🇲🇼 Malawi Business Considerations</h5>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Location:</strong> ${data.location} - Consider local market size and competition</li>
+                            <li><strong>Target Market:</strong> ${data.targetMarket} - Research customer needs and purchasing power</li>
+                            <li><strong>Registration:</strong> Register with Malawi Business Registration Service (MBRS)</li>
+                            <li><strong>Permits:</strong> Obtain necessary licenses from relevant authorities</li>
+                            <li><strong>Banking:</strong> Open business account with local banks (NBM, FDH, Standard Bank)</li>
+                            <li><strong>Insurance:</strong> Consider business insurance options available in Malawi</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <h5>⚠️ Recommendations</h5>
+                        ${data.viability === 'High' ? 
+                            '<p>✅ This business shows strong potential. Consider starting with a pilot phase to test the market.</p>' :
+                            data.viability === 'Moderate' ?
+                            '<p>⚠️ This business has moderate potential. Review your cost structure and pricing strategy.</p>' :
+                            '<p>❌ This business may face challenges. Consider reducing costs or increasing revenue projections.</p>'
+                        }
+                        <p>💡 <strong>Next Steps:</strong> Conduct market research, create a detailed business plan, and consider seeking advice from Malawi Enterprise Development Fund (MEDF) or local business incubators.</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('business-analysis').innerHTML = html;
+            document.getElementById('business-results').style.display = 'block';
+        }
+
+        function loadSkills() {
+            const category = document.getElementById('skills-category').value;
+            if (!category) {
+                document.getElementById('skills-checklist').style.display = 'none';
+                return;
+            }
+            
+            const skills = skillsDatabase[category];
+            let html = '';
+            
+            skills.forEach((skill, index) => {
+                html += `
+                    <div style="margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600;">${skill}</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="min-width: 80px;">Beginner</span>
+                            <input type="range" id="skill-${index}" min="1" max="5" value="3" 
+                                   style="flex: 1;" onchange="updateSkillDisplay(${index})">
+                            <span style="min-width: 60px;">Expert</span>
+                            <span id="skill-level-${index}" style="min-width: 40px; font-weight: bold; color: #667eea;">3/5</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('skills-items').innerHTML = html;
+            document.getElementById('skills-checklist').style.display = 'block';
+        }
+        
+        function updateSkillDisplay(index) {
+            const value = document.getElementById(`skill-${index}`).value;
+            document.getElementById(`skill-level-${index}`).textContent = `${value}/5`;
+        }
+        
+        function updateSkills() {
+            const studentName = document.getElementById('tracker-student-name').value;
+            const category = document.getElementById('skills-category').value;
+            
+            if (!studentName || !category) {
+                alert('Please enter student name and select a skills category');
+                return;
+            }
+            
+            const skills = skillsDatabase[category];
+            const skillLevels = [];
+            let totalScore = 0;
+            
+            skills.forEach((skill, index) => {
+                const level = parseInt(document.getElementById(`skill-${index}`).value);
+                skillLevels.push({ skill, level });
+                totalScore += level;
+            });
+            
+            const averageScore = (totalScore / skills.length).toFixed(1);
+            const proficiencyLevel = averageScore >= 4.5 ? 'Expert' : 
+                                   averageScore >= 3.5 ? 'Advanced' :
+                                   averageScore >= 2.5 ? 'Intermediate' : 'Beginner';
+            
+            displaySkillsResults(studentName, category, skillLevels, averageScore, proficiencyLevel);
+        }
+        
+        function displaySkillsResults(studentName, category, skillLevels, averageScore, proficiencyLevel) {
+            let html = `
+                <h4>📊 Skills Assessment Report for ${studentName}</h4>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h5>Category: ${category.charAt(0).toUpperCase() + category.slice(1)} Skills</h5>
+                    <p><strong>Overall Proficiency:</strong> ${proficiencyLevel} (${averageScore}/5)</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${(averageScore / 5) * 100}%"></div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+            `;
+            
+            skillLevels.forEach(item => {
+                const percentage = (item.level / 5) * 100;
+                const color = item.level >= 4 ? '#28a745' : item.level >= 3 ? '#ffc107' : '#dc3545';
+                
+                html += `
+                    <div class="skill-progress">
+                        <h6>${item.skill}</h6>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background: ${color};"></div>
+                        </div>
+                        <p style="margin-top: 5px;"><strong>Level ${item.level}/5</strong></p>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h5>🎯 Development Recommendations</h5>
+                    ${getSkillRecommendations(category, skillLevels, averageScore)}
+                </div>
+                
+                <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h5>🇲🇼 Malawi Training Opportunities</h5>
+                    ${getMalawiTrainingOptions(category)}
+                </div>
+            `;
+            
+            document.getElementById('skills-summary').innerHTML = html;
+            document.getElementById('skills-results').style.display = 'block';
+        }
+        
+        function getSkillRecommendations(category, skillLevels, averageScore) {
+            const weakSkills = skillLevels.filter(skill => skill.level <= 2).map(skill => skill.skill);
+            const strongSkills = skillLevels.filter(skill => skill.level >= 4).map(skill => skill.skill);
+            
+            let recommendations = '';
+            
+            if (parseFloat(averageScore) >= 4.0) {
+                recommendations = `
+                    <p>🌟 <strong>Excellent Progress!</strong> You show strong competency in ${category} skills.</p>
+                    <p>✅ <strong>Strengths:</strong> ${strongSkills.join(', ')}</p>
+                    <p>🚀 <strong>Next Steps:</strong> Consider advanced training or mentoring others in these areas.</p>
+                `;
+            } else if (parseFloat(averageScore) >= 3.0) {
+                recommendations = `
+                    <p>📈 <strong>Good Progress!</strong> You're developing solid ${category} skills.</p>
+                    <p>💡 <strong>Focus Areas:</strong> ${weakSkills.length > 0 ? weakSkills.join(', ') : 'Continue building all skills'}</p>
+                    <p>🎯 <strong>Goal:</strong> Aim to improve weaker areas through practice and training.</p>
+                `;
+            } else {
+                recommendations = `
+                    <p>🌱 <strong>Starting Journey!</strong> Great that you're building ${category} skills.</p>
+                    <p>📚 <strong>Priority Areas:</strong> ${weakSkills.join(', ')}</p>
+                    <p>💪 <strong>Action Plan:</strong> Focus on foundational training and regular practice.</p>
+                `;
+            }
+            
+            return recommendations;
+        }
+        
+        function getMalawiTrainingOptions(category) {
+            const trainingOptions = {
+                'technical': `
+                    <ul style="margin-left: 20px;">
+                        <li>Don Bosco Technical College (Lilongwe)</li>
+                        <li>Malawi Institute of Technology (Blantyre)</li>
+                        <li>TEVETA certified training centers</li>
+                        <li>Community technical colleges</li>
+                        <li>Apprenticeship programs with local businesses</li>
+                    </ul>
+                `,
+                'digital': `
+                    <ul style="margin-left: 20px;">
+                        <li>Malawi Digital Government Institute</li>
+                        <li>Computer training centers (Lilongwe, Blantyre, Mzuzu)</li>
+                        <li>Microsoft Digital Literacy programs</li>
+                        <li>Community ICT centers</li>
+                        <li>Online courses (where internet available)</li>
+                    </ul>
+                `,
+                'communication': `
+                    <ul style="margin-left: 20px;">
+                        <li>English language institutes</li>
+                        <li>Public speaking clubs (Toastmasters)</li>
+                        <li>Community radio training programs</li>
+                        <li>Adult literacy programs</li>
+                        <li>University extension programs</li>
+                    </ul>
+                `,
+                'entrepreneurial': `
+                    <ul style="margin-left: 20px;">
+                        <li>Malawi Enterprise Development Fund (MEDF) training</li>
+                        <li>Junior Achievement Malawi programs</li>
+                        <li>Small business development centers</li>
+                        <li>Cooperative training institutes</li>
+                        <li>NGO business skills programs</li>
+                    </ul>
+                `,
+                'agricultural': `
+                    <ul style="margin-left: 20px;">
+                        <li>Bunda College of Agriculture (LUANAR)</li>
+                        <li>Natural Resources College</li>
+                        <li>Agricultural extension services</li>
+                        <li>Farmer field schools</li>
+                        <li>Cooperative agricultural training</li>
+                    </ul>
+                `,
+                'life-skills': `
+                    <ul style="margin-left: 20px;">
+                        <li>Youth development programs</li>
+                        <li>NGO life skills workshops</li>
+                        <li>Community development programs</li>
+                        <li>Religious organization training</li>
+                        <li>Peer education programs</li>
+                    </ul>
+                `
+            };
+            
+            return trainingOptions[category] || '<p>Contact local education offices for training opportunities.</p>';
+        }
+        
+        // Auto-save functionality (using memory storage)
+        let savedData = {};
+        
+        function saveProgress() {
+            // This would typically save to a database
+            // For now, we'll use browser memory during session
+            savedData = {
+                timestamp: new Date().toISOString(),
+                career: {
+                    student: document.getElementById('student-name').value,
+                    strength: document.getElementById('academic-strength').value,
+                    interest: document.getElementById('interest-level').value
+                },
+                business: {
+                    idea: document.getElementById('business-idea').value,
+                    capital: document.getElementById('startup-capital').value,
+                    expenses: document.getElementById('monthly-expenses').value,
+                    revenue: document.getElementById('expected-revenue').value
+                }
+            };
+        }
+        
+        // Add event listeners for auto-save
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('change', saveProgress);
+            });
+        });
+    </script>
+</body>
+</html>

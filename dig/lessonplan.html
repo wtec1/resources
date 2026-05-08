@@ -1,0 +1,327 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson Plan Template</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-page { page-break-after: always; }
+            body { print-color-adjust: exact; }
+            .editable { border: none !important; background: transparent !important; }
+        }
+        .editable {
+            border: 1px dashed #d1d5db;
+            transition: all 0.2s;
+            min-height: 1.5rem;
+        }
+        .editable:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        .editable:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: white;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+        }
+        .section-header {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg">
+        <!-- Header Controls -->
+       <div class="no-print bg-blue-600 text-white p-4 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <h1 class="text-xl font-bold">Editable Lesson Plan Template</h1>
+        <div class="flex flex-col sm:flex-row sm:space-x-3 space-y-3 sm:space-y-0">
+            <button onclick="clearAll()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm">Clear All</button>
+            <button onclick="window.print()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm">Print</button>
+        </div>
+        </div>
+
+
+        <!-- Instructions -->
+        <div class="no-print bg-yellow-50 border-l-4 border-yellow-400 p-4 m-4">
+            <p class="text-sm text-yellow-800">
+                <strong>Instructions:</strong> Click on any dashed box to edit the content. All fields are editable. 
+                Use the Print button to generate a clean printable version.
+            </p>
+        </div>
+
+        <!-- Lesson Plan Content -->
+        <div class="p-6 space-y-6">
+            <!-- Title -->
+            <div class="text-center border-b-2 border-gray-800 pb-4">
+                <h1 class="text-3xl font-bold text-gray-800">LESSON PLAN</h1>
+            </div>
+
+            <!-- Basic Information Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Subject:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">Geography</div>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Class:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">Form 2 B</div>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Topic:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">Natural Disasters</div>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Date:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">30/01/13</div>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Time:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">14:25 pm – 15:40pm</div>
+                    </div>
+                    <div class="flex items-center">
+                        <label class="font-semibold text-gray-700 w-32">Students:</label>
+                        <div contenteditable="true" class="editable flex-1 p-2 rounded">26</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objectives Section -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">OBJECTIVES</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b p-4 space-y-4">
+                    <div>
+                        <label class="font-semibold text-gray-700 block mb-2">General Objective:</label>
+                        <div contenteditable="true" class="editable p-3 rounded min-h-16">Students will understand the concept of natural disasters and their impact on human life and the environment.</div>
+                    </div>
+                    
+                    <div>
+                        <label class="font-semibold text-gray-700 block mb-2">Specific Objectives:</label>
+                        <div class="space-y-2">
+                            <p class="text-sm text-gray-600 mb-2">By the end of the lesson, learners should be able to:</p>
+                            <div contenteditable="true" class="editable p-3 rounded min-h-20">
+                                a. Define natural disasters<br>
+                                b. Identify different types of natural disasters<br>
+                                c. Explain the causes of natural disasters<br>
+                                d. Describe the effects of natural disasters on communities
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resources Section -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">TEACHING & LEARNING RESOURCES</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b p-4">
+                    <div contenteditable="true" class="editable p-3 rounded min-h-16">
+                        1. Textbook: Geography for Secondary Schools<br>
+                        2. Pictures/images of natural disasters<br>
+                        3. World map<br>
+                        4. Projector and laptop<br>
+                        5. Whiteboard and markers
+                    </div>
+                </div>
+            </div>
+
+            <!-- Previous Knowledge Section -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">LEARNERS' PREVIOUS KNOWLEDGE</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b p-4">
+                    <div contenteditable="true" class="editable p-3 rounded min-h-16">
+                        - Students have basic knowledge about weather patterns<br>
+                        - Students understand the concept of environment<br>
+                        - Students are familiar with different geographical features
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lesson Development Table -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">LESSON DEVELOPMENT</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b overflow-hidden">
+                    <table class="w-full">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="border border-gray-300 p-3 text-left font-semibold w-1/6">Stage & Time</th>
+                                <th class="border border-gray-300 p-3 text-left font-semibold w-5/12">Teacher's Activities</th>
+                                <th class="border border-gray-300 p-3 text-left font-semibold w-5/12">Learners' Activities</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Introduction -->
+                            <tr>
+                                <td class="border border-gray-300 p-3 bg-blue-50 font-semibold">
+                                    <div contenteditable="true" class="editable">Introduction<br>(5 min)</div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-24">
+                                        - Greet students and take attendance<br>
+                                        - Ask: "What comes to mind when you hear 'natural disaster'?"<br>
+                                        - Show images of recent disasters<br>
+                                        - Introduce the lesson topic
+                                    </div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-24">
+                                        - Respond to greetings<br>
+                                        - Share their thoughts and experiences<br>
+                                        - Observe images<br>
+                                        - Listen attentively
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Development -->
+                            <tr>
+                                <td class="border border-gray-300 p-3 bg-green-50 font-semibold">
+                                    <div contenteditable="true" class="editable">Development<br>(25 min)</div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-32">
+                                        - Define natural disasters<br>
+                                        - Explain types: earthquakes, floods, hurricanes, etc.<br>
+                                        - Discuss causes using examples<br>
+                                        - Use map to show disaster-prone areas<br>
+                                        - Facilitate group discussion on effects
+                                    </div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-32">
+                                        - Take notes on definitions<br>
+                                        - Ask questions for clarification<br>
+                                        - Participate in group discussions<br>
+                                        - Identify locations on the map<br>
+                                        - Share personal experiences if any
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <!-- Conclusion -->
+                            <tr>
+                                <td class="border border-gray-300 p-3 bg-yellow-50 font-semibold">
+                                    <div contenteditable="true" class="editable">Conclusion<br>(10 min)</div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-24">
+                                        - Summarize key points<br>
+                                        - Ask students to name 3 natural disasters<br>
+                                        - Give assignment for next lesson<br>
+                                        - Preview next topic
+                                    </div>
+                                </td>
+                                <td class="border border-gray-300 p-3">
+                                    <div contenteditable="true" class="editable min-h-24">
+                                        - Listen to summary<br>
+                                        - Answer review questions<br>
+                                        - Note down assignment<br>
+                                        - Ask any final questions
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Assessment Section -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">ASSESSMENT</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b p-4">
+                    <div contenteditable="true" class="editable p-3 rounded min-h-20">
+                        1. Oral questions during the lesson<br>
+                        2. Group participation and discussion<br>
+                        3. Written assignment: List 5 natural disasters and their causes<br>
+                        4. Homework: Research one natural disaster that occurred in your country
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self Evaluation Section -->
+            <div class="space-y-4">
+                <div class="section-header text-white p-3 rounded-t">
+                    <h2 class="text-lg font-semibold">SELF-EVALUATION</h2>
+                </div>
+                <div class="border border-gray-300 rounded-b p-4">
+                    <div contenteditable="true" class="editable p-3 rounded min-h-32 leading-8">
+                        What went well in this lesson?<br>
+                        ________________________________________________________________________________________________<br><br>
+                        What challenges did I face?<br>
+                        ________________________________________________________________________________________________<br><br>
+                        How can I improve this lesson next time?<br>
+                        ________________________________________________________________________________________________<br><br>
+                        Did students achieve the learning objectives?<br>
+                        ________________________________________________________________________________________________
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 pt-6 border-t border-gray-300 flex justify-between items-center text-sm text-gray-600">
+                <div>
+                    <strong>Teacher's Name:</strong> <span contenteditable="true" class="editable inline-block min-w-32 border-b border-dashed border-gray-400 pb-1">_____________________</span>
+                </div>
+                <div>
+                    <strong>Signature:</strong> <span contenteditable="true" class="editable inline-block min-w-32 border-b border-dashed border-gray-400 pb-1">_____________________</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all content? This action cannot be undone.')) {
+                const editables = document.querySelectorAll('.editable');
+                editables.forEach(element => {
+                    if (element.getAttribute('contenteditable') === 'true') {
+                        element.innerHTML = '';
+                    }
+                });
+            }
+        }
+
+        // Auto-save to localStorage (optional feature)
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('editable')) {
+                const content = {};
+                document.querySelectorAll('.editable').forEach((element, index) => {
+                    content[index] = element.innerHTML;
+                });
+                localStorage.setItem('lessonPlanContent', JSON.stringify(content));
+            }
+        });
+
+        // Load saved content on page load
+        window.addEventListener('load', function() {
+            const saved = localStorage.getItem('lessonPlanContent');
+            if (saved) {
+                const content = JSON.parse(saved);
+                document.querySelectorAll('.editable').forEach((element, index) => {
+                    if (content[index]) {
+                        element.innerHTML = content[index];
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
